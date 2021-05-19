@@ -1,0 +1,63 @@
+#header {
+    position: absolute;
+    display: flex;
+    left: 200px;
+    top: 0;
+    right: 0;
+    height: 60px;
+    align-items: center;
+    border-bottom: 1px solid #808080;
+    justify-content: space-between;
+    font-weight: bold;
+}
+.img_list{
+    background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -847px -35px;
+    width: 20px;
+    height: 20px;
+    margin-top: 9px;
+    cursor: pointer;
+}
+.name-res{
+    padding-left :30px;
+    display : flex;
+}
+.user-in4{
+    display: flex;
+    align-items :center;
+}
+#select-res{
+    width: 100%;
+    border-style:none ;
+    border: none;
+    font-weight: bold;
+    padding-left: 5px;
+}
+.notiheader {
+    width: 40px;
+    height: 40px;
+    background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -788px -30px;
+
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    margin-top: 18px;
+}
+.avatar{
+    margin-right:10px;
+    width : 32px;
+    height:32px;
+    border-radius:50%;
+    background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -352px -894px;
+    cursor:pointer;
+}
+.cho-user{
+    width: 30px;
+    height: 10px;
+    background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -1129px -365px;
+    padding-left:16px;
+    margin-left: 10px;
+    cursor:pointer;
+    margin-top : 5px;
+}
+

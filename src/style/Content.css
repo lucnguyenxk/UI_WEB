@@ -136,6 +136,7 @@ th{
     color:#000000;
     position: sticky;
     top: 0;
+    z-index: 1;
 }
 th, td{
     padding-left:5px;
@@ -152,7 +153,7 @@ th, td{
 }
 .grid{
     margin-top: 10px;
-    height: 650px;
+    height: 60vh;
     overflow-y: scroll;
     padding-left: 10px;
     padding-right: 10px;

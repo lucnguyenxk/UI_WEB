@@ -48,6 +48,7 @@
 }
 .IsActive{
     font-weight: bold;
+    border: 1px solid #0e0d0d;
 }
 .btn-forward{
     background-color: #ffffff;
@@ -87,9 +88,6 @@ export default {
             this.pageMid=3;
             this.pageBehMid = 4;
             this.$emit("LoadFromPag",this.currentPage,this.PageSize);
-            
-            //console.log(this.PageSize);
-            //this.loadPaging();
         },
         PreOnClick(){
             if (this.currentPage > 1){
@@ -99,7 +97,6 @@ export default {
                 this.pageMid = this.pagePreMid +1;
                 this.pageBehMid = this.pageMid+1;
                 }
-                //this.loadPaging();
                 this.$emit("LoadFromPag",this.currentPage,this.PageSize);
             }
             
@@ -114,7 +111,6 @@ export default {
                 this.pageBehMid = this.pageMid+1;
                 }
                 this.$emit("LoadFromPag", this.currentPage, this.PageSize)
-                //this.loadPaging();
             }
             
             
@@ -122,27 +118,22 @@ export default {
         PageOneOnClick(){
             this.currentPage =this.pageOne;
             this.$emit("LoadFromPag",this.currentPage,this.PageSize);
-             //this.loadPaging();
         },
         PagePreMidOnClick(){
             this.currentPage = this.pagePreMid;
             this.$emit("LoadFromPag",this.currentPage,this.PageSize);
-            //this.loadPaging();
         },
         PageMidOnClick(){
             this.currentPage = this.pageMid;
             this.$emit("LoadFromPag",this.currentPage,this.PageSize);
-            //this.loadPaging();
         },
         PageBehMidOnClick(){
             this.currentPage = this.pageBehMid;
             this.$emit("LoadFromPag",this.currentPage,this.PageSize);
-            //this.loadPaging();
         },
         PageLastOnClick(){
             this.currentPage = this.pageLast;
             this.$emit("LoadFromPag",this.currentPage,this.PageSize);
-            //this.loadPaging();
         },
         DotFrontOnclick(){
             if(this.pagePreMid-2 <= this.pageOne ){

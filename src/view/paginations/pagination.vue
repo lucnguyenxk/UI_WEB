@@ -83,7 +83,11 @@ export default {
         selectPageSizeOnClick(selectPageSize){
             this.PageSize = selectPageSize;
             this.currentPage = 1;
+            this.pagePreMid =2;
+            this.pageMid=3;
+            this.pageBehMid = 4;
             this.$emit("LoadFromPag",this.currentPage,this.PageSize);
+            
             //console.log(this.PageSize);
             //this.loadPaging();
         },

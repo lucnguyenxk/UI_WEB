@@ -20,5 +20,5 @@
     </div>
 </template>
 <style>
-@import '../style/Header.css';
+@import '../style/header.css';
 </style>

@@ -46,10 +46,13 @@
                                             <p>Giới tính</p>
                                             <div class="GenRadio">
                                                 <input type="radio" id="male" name="gender" value="1" v-model="employee.gender">
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==1}" @click="RadioInputOnclick(1)" ></div>
                                                 <label for="male">Nam</label><br>
                                                 <input type="radio" id="female" name="gender" value="0" v-model="employee.gender">
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==0}" @click="RadioInputOnclick(0)"></div>
                                                 <label for="female">Nữ</label><br>
                                                 <input type="radio" id="other" name="gender" value="2" v-model="employee.gender">
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==2}" @click="RadioInputOnclick(2)"></div>
                                                 <label for="other">Khác</label>
                                             </div>
                                         </div>
@@ -118,10 +121,14 @@
             :isShowNoti ="this.isShowNoti"
             @hideNoti ="hideNoti"
             />
+            <NotiCloseDialog
+            :isShowNotiCloseDialog="isShowNotiCloseDialog"
+            @HideNotiCloseDialog ="HideNotiCloseDialog"
+            />
     </div>
 </template>
 <style>
-@import '../../style/Dialog.css';
+@import '../../style/dialog.css';
 .missing{
     display: none;
 }
@@ -145,10 +152,12 @@
 <script>
 import axios from 'axios';
 import NotiDuplicateCode from '../notifications/notiDuplicateCode.vue';
+import NotiCloseDialog from '../notifications/notiCloseDialog.vue';
 
 export default {
     components:{
         NotiDuplicateCode,
+        NotiCloseDialog,
     },
     created(){
     },
@@ -159,6 +168,22 @@ export default {
         formMode:{type:String, default: "add"},
     },  
     methods: {
+
+        //Ẩn thông báo khi nhấn button close 
+        HideNotiCloseDialog(mode){
+            if(mode == "deny" || mode =="accept")
+            {
+                this.isShowNotiCloseDialog = false;
+                this.$emit('hideDialog');
+            }
+            else {
+                this.isShowNotiCloseDialog = false;
+            }
+        },
+        RadioInputOnclick(data){
+            this.employee.gender = data;
+            console.log(this.employee.gender);
+        },
         MouseOverName(){
             this.isMissingNameEmp = true;
         },
@@ -180,10 +205,11 @@ export default {
             this.$emit('hideDialog');
         },
         CloDiaOnClick(){
-            this.$emit('hideDialog');
-            this.isMissingNameEmp = false;
-            this.isMissingEmployeeDepartment=false;
-            this.count=0;
+            this.isShowNotiCloseDialog = true ;
+            //this.$emit('hideDialog');
+            //this.isMissingNameEmp = false;
+            //this.isMissingEmployeeDepartment=false;
+            //this.count=0;
         },
         saveAndAddonClick(){
             if(this.employee.employeeCode==""){
@@ -313,8 +339,9 @@ export default {
             validEmail:"",
             Check :false,
             failRes : "",
-            isShowNoti: false
-        }
+            isShowNoti: false,
+            isShowNotiCloseDialog : false
+        } 
     },
     watch :{
         isShow(){
@@ -322,11 +349,11 @@ export default {
                this.$nextTick(()=> this.$refs.employeeCodeFocus.focus());
             }
         },
-        isAddMore(){
-            if(this.isAddMore==true){
-                this.$nextTick(()=> this.$refs.employeeCodeFocus.focus());
-            }
-        }
+       formMode(){
+           if(this.formMode=="add"){
+               this.$nextTick(()=> this.$refs.employeeCodeFocus.focus());
+           }
+       }
     }
 }
 </script>

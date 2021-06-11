@@ -1,11 +1,11 @@
 <template>
     <div>
         <div  class="" :class="{'Funtion' :!isShow}">
-            <ul class="List">
-                <li @click ="selectDelete()">Xoá</li>
-                <li>Nhân Bản</li>
-                <li>Gì đấy</li>
-            </ul>
+            <div class="ListFun">
+                <div @click ="selectDelete()" class="li">Xoá</div>
+                <div class="li">Nhân Bản</div>
+                <div class="li">Ngưng sử dụng</div>
+            </div>
         </div>
     </div>
 </template>
@@ -13,23 +13,22 @@
 .Funtion{
     display: none;
 }
-.List{
-    list-style-type: none;
-    width: 60px;
-    height: 60px;
+.ListFun{
+    width: 110px;
+    height: 65px;
     border: 1px solid #bbbbbb;
     position: absolute;
-    top: 15px;
-    left: 0;
+    top: 27px;
+    right: 0;
     background-color: #ffffff;
-    z-index: 100;
+    z-index: 1;
 }
-li{
+.li{
     margin-top: 3px;
     position: relative;
-    left: -31px;
+    padding-left: 3px;
 }
-li:hover {
+.li:hover {
     background-color: #f4f5f8;
     color:#2ca01c;
     

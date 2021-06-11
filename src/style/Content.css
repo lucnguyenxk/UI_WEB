@@ -10,26 +10,7 @@
 .Funtion{
     display: none;
 }
-.List{
-    list-style-type: none;
-    width: 70px;
-    height: 60px;
-    border: 1px solid #bbbbbb;
-    position: absolute;
-    top: 15px;
-    left: -20px;
-    background-color: #ffffff;
-}
-li{
-    margin-top: 3px;
-    position: relative;
-    left: -31px;
-}
-li:hover {
-    background-color: #f4f5f8;
-    color:#2ca01c;
-    
-}
+
 .page-title{
     display: flex;
     justify-content: space-between;
@@ -136,7 +117,7 @@ th{
     color:#000000;
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2;
 }
 th, td{
     padding-left:5px;

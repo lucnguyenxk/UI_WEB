@@ -11,7 +11,7 @@
     align-items: center;
     justify-content: center;
     display: flex;
-    z-index: 2;
+    z-index: 3;
 
 }
 .Dialog-content{
@@ -146,7 +146,22 @@ label{
     position: relative;
     right: 9px;
 }
+.RadioCheck{
+    width: 18px !important;
+    height: 18px !important;
+    background-image: url("../assets/icon/radio.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.RadioInput{
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #bbbbbb;
+}
 input[type = Radio]{
+    display: none;
     height:15px;
     width: 15px;
 }

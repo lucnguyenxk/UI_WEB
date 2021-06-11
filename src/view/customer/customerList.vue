@@ -63,22 +63,6 @@
             </div>
             <div class="footer">
                <div class=" CountRecord"> Tổng số: <span class="totalRecord">{{this.totalRecord}}</span> bản ghi </div>
-                <!-- <div class="pos-page">
-                    <select name="" id="NRPP" v-model="selectPageSize" @change="selectPageSizeOnClick(selectPageSize)">
-                        <option value="20">20 bản ghi một trang</option>
-                        <option value="50">50 bản ghi một trang</option>
-                        <option value="100">100 bản ghi một trang</option>
-                    </select>
-                    <button class="btn-forward first" @click="PreOnClick()">Trước</button> 
-                    <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageOne  }" @click="PageOneOnClick()">{{this.pageOne}}</button>
-                    <button class="paging threeDots" :class="{'displayThreeDotsFirst':(this.pagePreMid==2) || this.pageLast < 5}" @click="DotFrontOnclick()" >...</button>
-                    <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pagePreMid, 'display': this.pageLast<2 }" @click="PagePreMidOnClick()">{{this.pagePreMid}}</button>
-                    <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageMid, 'display' : this.pageLast <3}" @click="PageMidOnClick()">{{this.pageMid}}</button>
-                    <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageBehMid, 'display' :this.pageLast <4}" @click="PageBehMidOnClick()">{{this.pageBehMid}}</button>
-                    <button class="paging threeDots" :class="{'displayThreeDotsFirst':(this.pageBehMid ==this.pageLast-1) || this.pageLast < 5}" @click="DotBehindOnclick()">...</button>
-                    <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageLast , 'display' : this.pageLast < 5}" @click="PageLastOnClick()">{{this.pageLast}}</button>
-                    <button class="btn-forward next" @click="NextOnClick()">Sau</button>
-                </div> -->
                 <Pagination
                     :currentPage="this.currentPage"
                     :pageLast="this.pageLast"
@@ -94,7 +78,6 @@
                 @hideDialog="hideDialog"
                 @AddMore="AddMore"
                 :isAddMore ="this.isAddMore"
-                ref="empCode"
             />
             <NotiDelete
             :isShowNotiDelete ="isShowNotiDelete"
@@ -120,7 +103,6 @@ export default {
         Pagination
     },
     created(){
-        //this.loadData();
         this.clickOutSize(); 
         this.loadPaging();
     },
@@ -142,13 +124,6 @@ export default {
             isShowNotiDelete : false,
             empCodeToDelete: "",
             isAddMore : false,
-            // showDotFront: false,
-            // showDotBehind : true,
-            // pageOne: 1,
-            // pageLast:0,
-            // pagePreMid:2,
-            // pageMid:3,
-            // pageBehMid:4,
             pageLast: 1,
             currentPage:1,
             PageSize:20,
@@ -162,11 +137,9 @@ export default {
     methods:{
         SetGrPosId(data){
             this.setGrpByPosId=data;
-            console.log("posss")
         },
         SetGrDepartId(data){
             this.setGrpByDepartId =data;
-            console.log("depaaa")
         },
         clickOutSize(){
             var o = this; 
@@ -202,84 +175,6 @@ export default {
             this.PageSize = PageSize;
             this.loadPaging();
         },
-        // selectPageSizeOnClick(selectPageSize){
-        //     this.PageSize = selectPageSize;
-        //     this.currentPage =1;
-        //     //console.log(this.PageSize);
-        //     this.loadPaging();
-        // },
-        // PreOnClick(){
-        //     if (this.currentPage > 1){
-        //         this.currentPage= this.currentPage-1;
-        //         if(this.currentPage < this.pageLast - 3 && this.currentPage > 1){
-        //         this.pagePreMid = this.currentPage;
-        //         this.pageMid = this.pagePreMid +1;
-        //         this.pageBehMid = this.pageMid+1;
-        //         }
-        //         this.loadPaging();
-        //     }
-            
-            
-        // },
-        // NextOnClick(){
-        //     if(this.currentPage < this.pageLast){
-        //         this.currentPage +=1;
-        //         if(this.currentPage > 1 && this.currentPage < this.pageLast -2){
-        //         this.pagePreMid = this.currentPage;
-        //         this.pageMid = this.pagePreMid +1;
-        //         this.pageBehMid = this.pageMid+1;
-        //         }
-        //         this.loadPaging();
-        //     }
-            
-            
-        // },
-        // PageOneOnClick(){
-        //     this.currentPage =this.pageOne;
-        //      this.loadPaging();
-        // },
-        // PagePreMidOnClick(){
-        //     this.currentPage = this.pagePreMid;
-        //     this.loadPaging();
-        // },
-        // PageMidOnClick(){
-        //     this.currentPage = this.pageMid;
-        //     this.loadPaging();
-        // },
-        // PageBehMidOnClick(){
-        //     this.currentPage = this.pageBehMid;
-        //     this.loadPaging();
-        // },
-        // PageLastOnClick(){
-        //     this.currentPage = this.pageLast;
-        //     this.loadPaging();
-        // },
-        // DotFrontOnclick(){
-        //     if(this.pagePreMid-2 <= this.pageOne ){
-        //         this.pagePreMid =this.pageOne +1;
-        //         this.pageMid = this.pagePreMid +1;
-        //         this.pageBehMid = this.pageMid +1;
-
-        //     }
-        //     else{
-        //         this.pagePreMid= this.pagePreMid-2;
-        //         this.pageMid = this.pageMid-2;
-        //         this.pageBehMid =  this.pageBehMid -2;
-        //     }
-        // },
-        // DotBehindOnclick(){
-        //     if(this.pageBehMid+2 >= this.pageLast){
-        //         this.pageBehMid = this.pageLast-1;
-        //         this.pageMid = this.pageBehMid -1;
-        //         this.pagePreMid = this.pageMid -1;
-        //     }
-        //     else
-        //     {
-        //         this.pageBehMid =  this.pageBehMid+2;
-        //         this.pagePreMid= this.pagePreMid+2;
-        //         this.pageMid = this.pageMid+2;
-        //     }
-        // },
 
         loadPaging(){
             axios
@@ -346,7 +241,7 @@ export default {
             .catch((res)=>{
                 console.log(res);
             })
-            this.selectedEmp={employeeCode: this.selectedEmp.employeeCode};
+            this.selectedEmp={employeeCode: this.selectedEmp.employeeCode, gender : 1};
         },
         AddMore(){
             //this.AddMore =true;
@@ -414,5 +309,5 @@ export default {
 }
 </script>
 <style>
-@import '../../style/Content.css';
+@import '../../style/content.css';
 </style>

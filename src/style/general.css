@@ -1,7 +1,7 @@
 
-@import url('Button.css');
-@import url('Selection.css');
-@import url('Input.css');
+@import url('button.css');
+@import url('selection.css');
+@import url('input.css');
 body {
     margin: 0;
 }

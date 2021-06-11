@@ -4,8 +4,22 @@
                 <div class="Model">
                     <div class="Dialog-content">
                         <div class= "Dialog-Header">
-                            <div class="header-title">THÔNG TIN NHÂN VIÊN</div>
-                            <button class="close-diacontent" @click="CloDiaOnClick()">&#x2715;</button>
+                            <div class="Dialog-Header-Left">
+                                <div class="header-title">THÔNG TIN NHÂN VIÊN</div>
+                                <div class = "input-checkbox">
+                                    <input type="checkbox" class="checboxDetail">
+                                    <div>Là khách hàng</div>
+                                </div>
+                                <div class = "input-checkbox" >
+                                    <input type="checkbox" class="checboxDetail">
+                                    <div>Là nhà cung cấp</div>
+                                </div>
+                                
+                            </div>
+                            <div class="Dialog-Header-Right">
+                                <button class="help-diacontent" @click="ocClickHelp()"></button>
+                                <button class="close-diacontent" @click="CloDiaOnClick()"></button>
+                            </div>
                         </div>
                         <div class="Dialog-Body">
                             <div class="Dialog_Body_top">
@@ -110,8 +124,10 @@
                         </div>
                         <div class="Dialog-footer">
                             <button class="btn-cancel" id="" @click="CancelDialog()">Huỷ</button>
-                            <button class="btn-cancel add" @click="AddOnClick()" id="">Lưu</button>
-                            <button class="btn-save_and_add" id="" @click="saveAndAddonClick()">Lưu và Thêm</button>
+                            <div class="addAndSave">
+                                <button class="btn-cancel add" @click="AddOnClick()" id="">Lưu</button>
+                                <button class="btn-save_and_add" id="" @click="saveAndAddonClick()">Lưu và Thêm</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -261,7 +277,6 @@ export default {
                     .then((res)=>{
                         this.$emit('AddMore');
                         console.log(res)
-                        //this.Check = true;
                     })
                     .catch((res)=>{
                         console.log(res); 

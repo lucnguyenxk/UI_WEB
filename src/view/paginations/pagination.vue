@@ -21,15 +21,15 @@
 <style>
 .pos-page{
     display: flex;
-    justify-content : flex-end;
+    justify-content : center;
+    align-items: center;
  }
 #NRPP{
     margin-right: 10px;
     height: 30px;
 }
 .paging {
-    margin-top: 5px;
-    width: 1px;
+    width: 22px;
     height: 22px;
     background-color:#ffffff;
     background-position: center;
@@ -37,7 +37,9 @@
     margin: 5px;
     outline: none;
     color: #080808 ;
-    padding-left: 8px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
 }
       
 .threeDots{
@@ -51,10 +53,11 @@
     border: 1px solid #0e0d0d;
 }
 .btn-forward{
+    width: 40px;
+    height: 30px;
+    border: none;
+    color: #000;
     background-color: #ffffff;
-    background-position: center;
-    border-color: #ffffff;
-    
 }
 .display {
     display: none;

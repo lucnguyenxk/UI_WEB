@@ -3,8 +3,8 @@ select {
     border: 1px solid #bbbbbb;
     padding-left: 16px;
     padding-right: 16px;
+    border-radius: 3px;
     outline: none;
-    box-sizing: border-box;
     color: #000000;
     font-family:  notosans-semibold;
     padding-left: 16px;

@@ -4,6 +4,9 @@ input{
     padding-left: 16px;
     color : #000000;
     border: 1px solid #bbbbbb;
+    border-radius: 3px;
+    padding-top: 1px;
+    padding-bottom: 1px;
     outline: 0;
     padding-right:8px;
     font-family: GoogleSans-Regular;

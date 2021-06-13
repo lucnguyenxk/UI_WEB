@@ -124,14 +124,7 @@ th, td{
     border-right : 1px dotted #c7c7c7;
 }
     th:first-child, th:last-child, td:first-child, td:last-child {
-        padding-left: 16px;
-    }
-    th:first-child, td:first-child{
-        display:flex;
-        align-items: center;
-        justify-content: center;
-        height: inherit;
-        padding: 0;
+        padding-left: 10px;
     }
 .inputCheckbox{
     width: 18px;

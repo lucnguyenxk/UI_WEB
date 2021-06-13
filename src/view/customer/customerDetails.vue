@@ -27,11 +27,12 @@
                                     <div class="Code_Name">
                                         <div class="Code_Emp">
                                             <p>Mã nhân viên <span>*</span></p>
-                                            <input type="text" class="CodeEmp" ref ="employeeCodeFocus" v-model="employee.employeeCode">
+                                            <input type="text" class="CodeEmp" :class="{'MissingValue':isMissingEmployeeCode}" ref ="employeeCodeFocus" v-model="employee.employeeCode" @mouseover="mouseOverCode()" @mouseout="mouseOutCode()">
+                                            <p class="noti" :class="{'missing':!isMissingEmployeeCode}" >Mã không được trống!</p>
                                         </div>
                                         <div class="Name_Emp">
                                             <p>Tên nhân viên <span>*</span></p> 
-                                            <input type="text" @mouseover="MouseOverName()" @mouseout="MouseOutName()" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullname">
+                                            <input type="text" @mouseover="MouseOverName()" @mouseout="MouseOutName()" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullName">
                                             <p class="noti" :class="{'missing':!isMissingNameEmp}" >Tên không được trống!</p>
                                         </div>
                                     </div>
@@ -63,10 +64,10 @@
                                                 <div class="RadioInput" :class="{'RadioCheck':employee.gender==1}" @click="RadioInputOnclick(1)" ></div>
                                                 <label for="male">Nam</label><br>
                                                 <input type="radio" id="female" name="gender" value="0" v-model="employee.gender">
-                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==0}" @click="RadioInputOnclick(0)"></div>
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==2}" @click="RadioInputOnclick(2)"></div>
                                                 <label for="female">Nữ</label><br>
                                                 <input type="radio" id="other" name="gender" value="2" v-model="employee.gender">
-                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==2}" @click="RadioInputOnclick(2)"></div>
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==0}" @click="RadioInputOnclick(0)"></div>
                                                 <label for="other">Khác</label>
                                             </div>
                                         </div>
@@ -125,7 +126,7 @@
                         <div class="Dialog-footer">
                             <button class="btn-cancel" id="" @click="CancelDialog()">Huỷ</button>
                             <div class="addAndSave">
-                                <button class="btn-cancel add" @click="AddOnClick()" id="">Lưu</button>
+                                <button class="btn-cancel add" @click="addOnClick()" id="">Lưu</button>
                                 <button class="btn-save_and_add" id="" @click="saveAndAddonClick()">Lưu và Thêm</button>
                             </div>
                         </div>
@@ -140,6 +141,11 @@
             <NotiCloseDialog
             :isShowNotiCloseDialog="isShowNotiCloseDialog"
             @HideNotiCloseDialog ="HideNotiCloseDialog"
+            />
+            <NotiEmptyValue
+            :isShowNotiEmptyValue="isShowNotiEmptyValue"
+            @hideNotiEmptyValue ="hideNotiEmptyValue"
+            :notiEmptyValue="notiEmptyValue"
             />
     </div>
 </template>
@@ -160,6 +166,7 @@
     position: absolute;
     background-color: #393a3d;
     color: #ffffff;
+    z-index: 1;
 }
 .MissingValue{
     border-color: red !important;
@@ -169,19 +176,22 @@
 import axios from 'axios';
 import NotiDuplicateCode from '../notifications/notiDuplicateCode.vue';
 import NotiCloseDialog from '../notifications/notiCloseDialog.vue';
+import NotiEmptyValue from '../notifications/notiEmptyValue.vue';
 
 export default {
     components:{
         NotiDuplicateCode,
         NotiCloseDialog,
+        NotiEmptyValue,
     },
     created(){
     },
     props:{
+        oldEmployee:{type: Object, default : null},
         isAddMore:{type : Boolean,default: false},
         employee:{type: Object, default: null},
         isShow:{type:Boolean, default : false},
-        formMode:{type:String, default: "add"},
+        formMode:{type:String, default: "add"}, // mode kiểm tra xem công việc là thêm sửa hay xóa.
     },  
     methods: {
 
@@ -200,17 +210,57 @@ export default {
             this.employee.gender = data;
             console.log(this.employee.gender);
         },
+        /**
+         * sự kiện chuột hover qua ô nhập mã
+         * created by ndluc(13/06/2021)
+         */
+        mouseOverCode(){
+            this.isMissingEmployeeCode = true;
+        },
+        /**
+         * sự kiện chuột không còn hover qua ô nhập mã
+         * created by ndluc(13/06/2021)
+         */
+        mouseOutCode(){
+            this.isMissingEmployeeCode = false;
+        },
+
+        /**
+         * sự kiện chuột hover qua ô nhập tên
+         * created by ndluc(13/06/2021)
+         */
         MouseOverName(){
             this.isMissingNameEmp = true;
         },
+
+        /**
+         * sự kiện chuột hover qua ô nhập phòng ban
+         * created by ndluc(13/06/2021)
+         */
         MouseOverGroup(){
             this.isMissingEmployeeDepartment = true;
         },
+
+        /**
+         * sự kiện chuột không còn hover qua ô nhập tên
+         * created by ndluc(13/06/2021)
+         */
         MouseOutName(){
             this.isMissingNameEmp=false;
         },
+
+        /**
+         * sự kiện chuột không còn hover qua ô nhập phòng ban
+         * created by ndluc(13/06/2021)
+         */
         MouseOutGroup(){
             this.isMissingEmployeeDepartment = false
+        },
+        /**
+         * Đóng thông báo giá trị bị để trống
+         */
+        hideNotiEmptyValue(){
+            this.isShowNotiEmptyValue = false;  
         },
         hideNoti(){
             this.isShowNoti = false;
@@ -220,31 +270,56 @@ export default {
             this.isMissingEmployeeDepartment=false;
             this.$emit('hideDialog');
         },
+        /**
+         * Sự kiện click vào nút đóng dialog
+         */
         CloDiaOnClick(){
-            this.isShowNotiCloseDialog = true ;
-            //this.$emit('hideDialog');
-            //this.isMissingNameEmp = false;
-            //this.isMissingEmployeeDepartment=false;
-            //this.count=0;
+            //debugger;//eslint-disable-line no-debugger
+            var checkEqual = true;
+            //var oldEmpProperty = Object.getOwnPropertyNames(this.oldEmployee);
+            var empProperty = Object.getOwnPropertyNames(this.employee);
+            // if(oldEmpProperty.length != empProperty.length){
+            //    this.isShowNotiCloseDialog =true;
+            // }
+            for(var i= 0; i< empProperty.length-1; i++)
+            {
+               var propName = empProperty[i];
+                if(this.employee[propName] != this.oldEmployee[propName])
+                {
+                    //debugger;//eslint-disable-line no-debugger
+                    this.isShowNotiCloseDialog = true;
+                    checkEqual = false;
+                    break;
+                }
+            }
+            if(checkEqual){
+                this.$emit('hideDialog')
+            }  
         },
-        saveAndAddonClick(){
+
+        /**
+         * validate đối tượng trước khi thêm , sửa
+         * created by ndluc(13/06/2021)
+         */
+        validateEmployee(){
+            //debugger; //eslint-disable-line no-debugger
             if(this.employee.employeeCode==""){
-                this.isMissingEmployeeCode=true;
+                this.validate = false;
+                this.isShowNotiEmptyValue = true;
+                this.notiEmptyValue = "Mã nhân viên không được để trống."
+            }
+            else if(this.employee.fullName==""||this.employee.fullName==null){
+                this.validate = false;
+                this.isShowNotiEmptyValue =true;
+                this.notiEmptyValue = "Tên nhân viên không được để trống."
+            }
+            else if(this.employee.departmentId==""||this.employee.departmentId==null){
+                this.validate = false;
+                this.isShowNotiEmptyValue = true;
+                this.notiEmptyValue = "Phòng ban không được để trống."
             }
             else{
-                this.isMissingEmployeeCode=false;
-            }
-            if(this.employee.fullname==""||this.employee.fullname==null){
-                this.isMissingNameEmp=true;
-            }
-            else{
-                this.isMissingNameEmp=false;
-            }
-            if(this.employee.departmentId==""||this.employee.departmentId==null){
-                this.isMissingEmployeeDepartment=true;
-            }
-            else{
-                this.isMissingEmployeeDepartment=false;
+                this.validate = true;
             }
             if(this.isMissingEmail==false){
                 this.validEmail=""+this.employee.Email;
@@ -254,108 +329,90 @@ export default {
                     this.isMissingEmail=true;
                 }
             }
-            if(this.isMissingNameEmp==false) 
+        },
+        /**
+         * thêm mới hoặc upddate đối tượng
+         * created by ndluc(13/06/2021)
+         */
+        addOrUpdateEmployee(){
+        
+            if(this.validate) 
             {
                 if(this.formMode=="add"){
                     axios
-                    .post("https://localhost:44333/api/v1/Employees",this.employee)
+                    .post("https://localhost:44372/api/v1/Employees",this.employee)
                     .then((res)=>{
-                        this.$emit('AddMore');
+                        if(this.isSaveAndAdd){
+                            this.$emit('AddMore');
+                        }
+                        else{
+                            this.$emit('hideDialog');
+                        }
                         console.log(res)
-                        ///this.Check = true;
                     })
                     .catch((error)=>{
-                            this.failRes = error.response.data;
+                            //debugger;//eslint-disable-line no-debugger
+                            this.failRes = error.response.data.userMsg;
                             this.isShowNoti = true;
-                            console.log(this.failRes);
-                            console.log(this.failRes);
                     })
                 }
                 else{
                    axios
-                    .put("https://localhost:44333/api/v1/Employees/"+this.employee.employeeId,this.employee)
+                    .put("https://localhost:44372/api/v1/Employees/"+this.employee.employeeId,this.employee)
                     .then((res)=>{
-                        this.$emit('AddMore');
+                        if(this.isSaveAndAdd){
+                            this.$emit('AddMore');
+                        }
+                        else{
+                            this.$emit('hideDialog');
+                        }
                         console.log(res)
-                    })
-                    .catch((res)=>{
-                        console.log(res); 
-                    })
-                }
-            }
-            
-        },
-        AddOnClick(){
-            if(this.employee.employeeCode==""){
-                this.isMissingEmployeeCode=true;
-            }
-            else{
-                this.isMissingEmployeeCode=false;
-            }
-            if(this.employee.fullname==""||this.employee.fullname==null){
-                this.isMissingNameEmp=true;
-            }
-            else{
-                this.isMissingNameEmp=false;
-            }
-            if(this.employee.departmentId==""||this.employee.departmentId==null){
-                this.isMissingEmployeeDepartment=true;
-            }
-            else{
-                this.isMissingEmployeeDepartment=false;
-            }
-            if(this.isMissingEmail==false){
-                this.validEmail=""+this.employee.Email;
-                
-                if(this.validEmail.search("@") < 0 ||this.validEmail.search(".com")<0){
-                    this.validEmail=" đúng định dạng:ABC@XYZ.com";
-                    this.isMissingEmail=true;
-                }
-            }
-            if(this.isMissingNameEmp==false) 
-            {
-                if(this.formMode=="add"){
-                    axios
-                    .post("https://localhost:44333/api/v1/Employees",this.employee)
-                    .then((res)=>{
-                        console.log(res)
-                        this.$emit('hideDialog');
                     })
                     .catch((error)=>{
-                            this.failRes = error.response.data;
-                            this.isShowNoti = true;
-                            console.log(this.failRes);
-                            console.log(this.failRes);
-                    })
-                }
-                else{
-                    axios
-                    .put("https://localhost:44333/api/v1/Employees/"+this.employee.employeeId,this.employee)
-                    .then((res)=>{
-                        console.log(res)
-                        this.$emit('hideDialog');
-                    })
-                    .catch((res)=>{
-                        console.log(res); 
+                        this.failRes = error.response.data.userMsg;
+                        this.isShowNoti = true; 
                     })
                 }
             }
+        },
+        /**
+         * Lưu đối tượng và thêm mới
+         * created by ndluc(13/06/2021)
+         */
+        saveAndAddonClick(){
+            this.isSaveAndAdd = true;
+            this.validateEmployee();
+            this.addOrUpdateEmployee();
+        },
+
+        /**
+         * Thực hiện lưu đối tượng
+         * created by ndluc(13/06/2021)
+         */
+        addOnClick(){
+            this.isSaveAndAdd = false;
+            this.validateEmployee();
+            this.addOrUpdateEmployee();
+            
         },
     },
     data() {
         return {
             count:0,
             missing : false,
-            isMissingEmployeeDepartment :false,
-            isMissingNameEmp :false,
-            isMissingCMND :false,
-            isMissingPhoneNumber :false,
+            isMissingEmployeeDepartment :false,// biến kiểm tra phòng ban có trống hay không
+            isMissingNameEmp :false,// biến kiểm tra tên có bị trốn hay không
             isMissingEmail :false,
+            isMissingEmployeeCode: false,// biến kiểm tra mã nhân viên có bị trống hay không
             validEmail:"",
             Check :false,
-            failRes : "",
+            validate : false, // kiểm tra việc validate có đúng hay không
+            failRes : "",// chuỗi nhận giá trị thông báo từ server cho người dùng.
+            notiEmptyValue : "", // chuỗi thông báo giá trị bị trống cho người dùng.
             isShowNoti: false,
-            isShowNotiCloseDialog : false
+            isShowNotiCloseDialog : false,// biến xác định đưa ra thông báo đóng dialog
+            isSaveAndAdd : false, // biến kiểm tra việc chỉ lưu hay lưu và thêm
+            isShowNotiEmptyValue: false,
         } 
     },
     watch :{

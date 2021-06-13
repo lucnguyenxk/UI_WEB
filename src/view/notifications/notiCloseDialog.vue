@@ -4,7 +4,7 @@
                 <div class="Model">
                     <div class="notify-content">
                         <div class="notify-Mes">
-                            <div class="img-noti"></div>
+                            <div class="img-noti closeDialogImg" ></div>
                             <h1 class="Mess">Dữ liệu đã bị thay đổi. Bạn có muốn cất không?</h1>
                         </div>
                         <div class="notify-button">

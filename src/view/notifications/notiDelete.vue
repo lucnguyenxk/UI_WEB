@@ -34,7 +34,7 @@ export default {
         acceptDelete(){
             console.log(this.idToDelete);
             axios
-            .delete("https://localhost:44333/api/v1/Employees/"+this.idToDelete)
+            .delete("https://localhost:44372/api/v1/Employees/"+this.idToDelete)
             .then((res)=>{
                 console.log(res);
                 this.$emit('HideNotiDelete')

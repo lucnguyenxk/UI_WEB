@@ -35,8 +35,8 @@
                             <tr v-for="emp in this.employees" :key="emp.employeeId"  @click="TakeIdDel(emp.EmployeeId)" >
                                 <td><input type="checkbox" name="" id="" class="inputCheckbox"></td>
                                 <td>{{emp.employeeCode}}</td>
-                                <td>{{emp.fullname}}</td>
-                                <td class="colum-BankCount">{{formatGender(emp.gender)}}</td>
+                                <td>{{emp.fullName}}</td>
+                                <td class="colum-BankCount">{{emp.genderName}}</td>
                                 <td>{{formatDate(emp.dateOfBirth)}}</td>
                                 <td>{{emp.phoneNumber}}</td>
                                 <td>{{emp.email}}</td>
@@ -74,6 +74,7 @@
             <CustomerDetail
                 :formMode ="formMode"
                 :isShow="isShowDialogDetail"
+                :oldEmployee="oldEmployee"
                 :employee="selectedEmp"
                 @hideDialog="hideDialog"
                 @AddMore="AddMore"
@@ -119,6 +120,7 @@ export default {
             employees : [],
             formMode : "add",
             selectedEmp:{},
+            oldEmployee: {},
             isShowListFunction : false,
             currentId : "",
             isShowNotiDelete : false,
@@ -178,10 +180,9 @@ export default {
 
         loadPaging(){
             axios
-            .get("https://localhost:44333/api/v1/Employees/getPaging?PageNumber="+this.currentPage+"&PageSize=" +this.PageSize +"&SearchString="+this.SearchString)
+            .get("https://localhost:44372/api/v1/Employees/GetPaging?PageNumber="+this.currentPage+"&PageSize=" +this.PageSize +"&SearchString="+this.SearchString)
             .then((res)=>{
                 this.employees = res.data;
-                //console.log(this.employees.length);
                 if(this.employees.length> 0){
                     this.totalRecord = this.employees[0].totalRecord;
                     //console.log(this.totalRecord);
@@ -231,23 +232,28 @@ export default {
             console.log(this.currentId);
             console.log(this.empCodeToDelete);
         },
+
+        /**
+         * Hàm lấy mã mới cho nhân viên
+         * created by ndluc(13/06/2021)
+         */
         async getNewCode(){
             this.formMode="add";
             await axios
-            .get("https://localhost:44333/api/v1/Employees/getNewCode")
+            .get("https://localhost:44372/api/v1/Employees/GetNewCode")
             .then((res)=>{
                 this.selectedEmp.employeeCode = res.data;
+                this.oldEmployee.employeeCode = res.data;
             })
             .catch((res)=>{
                 console.log(res);
             })
             this.selectedEmp={employeeCode: this.selectedEmp.employeeCode, gender : 1};
+            this.oldEmployee ={employeeCode : this.oldEmployee.employeeCode, gender: 1};
         },
         AddMore(){
             //this.AddMore =true;
             this.getNewCode();
-            
-            console.log(this.isShowDialogDetail);
         },
         addCusOnClick(){
             this.isShowDialogDetail= true;
@@ -265,15 +271,6 @@ export default {
             this.isShowNotiDelete = false;
             this.loadPaging();
         },
-        formatGender(data){
-            if(data==0){
-                return "Nữ";
-            }
-            if(data==1){
-                return "Nam";
-            }
-            return "Không xác định";
-        },
         formatDate(data){
             var date = data + "";
             if(date=="null") return "";
@@ -286,14 +283,20 @@ export default {
             var result = date.substr(0,4) +"-"+ date.substr(5,2)+"-"+date.substr(8,2);
             return result
         },
+        /**
+         * lấy dữ liệu vào gửi cho dialog khi thực hiện sửa dữ liệu
+         * created by ndluc(13/06/2021)
+         */
         empOnClick(EmployeeId){
             this.formMode="EDIT";
             axios
-            .get("https://localhost:44333/api/v1/Employees/"+EmployeeId)
+            .get("https://localhost:44372/api/v1/Employees/"+EmployeeId)
             .then((res)=>{
-                this.selectedEmp = res.data;
+                var obj = res.data;
+                this.selectedEmp = obj;
+                this.oldEmployee = obj;
                 this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
-                console.log(this.selectedEmp);
+                this.oldEmployee.dateOfBirth=this.formatDateForDetail(this.oldEmployee.dateOfBirth);
                 this.isShowDialogDetail=true;
             })
             .catch((res)=>{

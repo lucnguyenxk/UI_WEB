@@ -213,22 +213,25 @@ input[type = Radio]{
     padding-top: 15px;
 }
 .btn-cancel {
+    width: 63px;
     margin-right: 20px;
-    padding-left: 10px;
     background-color: rgb(128 128 128 / -0.80);
     border: 1px solid #bbbbbb;
     cursor:pointer;
     color: rgb(0 0 0);
     cursor:pointer;
     font-weight: bold;
+    padding: 0;
+    justify-content: center;
 }
 
 .btn-save_and_add{
     width : 116px; 
     border-radius: 6px;
-    padding-left: 15px; 
+    justify-content: center;
     cursor:pointer;
     font-weight: bold;
+    padding: 0;
 }
 .addAndSave{
     width: 300px;

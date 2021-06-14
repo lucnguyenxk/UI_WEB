@@ -38,12 +38,20 @@
                                     </div>
                                     <div class="Group_Emp">
                                         <p>Đơn vị <span>*</span></p>
-                                        <select name="" id="Group" @mouseover="mouseOver('group')" @mouseout="mouseOut('group')" v-model="employee.departmentId" class="" :class="{ 'MissingValue':isMissingEmployeeDepartment}">
+                                        <!-- <select name="" id="Group" @mouseover="mouseOver('group')" @mouseout="mouseOut('group')" v-model="employee.departmentId" class="" :class="{ 'MissingValue':isMissingEmployeeDepartment}">
                                             <option value="7c4f14d8-66fb-14ae-198f-6354f958f4c0">Phòng nhân sự</option>
                                             <option value="45ac3d26-18f2-18a9-3031-644313fbb055">Phòng đào tạo</option>
                                             <option value="3f8e6896-4c7d-15f5-a018-75d8bd200d7c">Phòng hành chính</option>
                                             <option value="78aafe4a-67a7-2076-3bf3-eb0223d0a4f7">Phòng Marketing</option>
-                                        </select>
+                                        </select> -->
+                                        <ComboboxAutoComplete
+                                            :options="departments"
+                                            value_key="departmentId"
+                                            label_key="departmentName" 
+                                            :defaultValue="employee.departmentId"
+                                            :isDialogShow="isShow"
+                                            v-model="employee.departmentId"
+                                        />
                                         <p class="noti" :class="{'missing':!isMissingEmployeeDepartment}" >Tên đơn vị không được trống!</p>
                                     </div>
                                     <div class="Position_Emp"> 
@@ -126,8 +134,8 @@
                         <div class="Dialog-footer">
                             <button class="btn-cancel" id="" @click="CancelDialog()">Huỷ</button>
                             <div class="addAndSave">
-                                <button class="btn-cancel add" @click="addOnClick()" id="">Lưu</button>
-                                <button class="btn-save_and_add" id="" @click="saveAndAddonClick()">Lưu và Thêm</button>
+                                <button class="btn-cancel add" @click="addOnClick()" id="">Cất</button>
+                                <button class="btn-save_and_add" id="" @click="saveAndAddonClick()">Cất và Thêm</button>
                             </div>
                         </div>
                     </div>
@@ -177,12 +185,14 @@ import axios from 'axios';
 import NotiDuplicateCode from '../notifications/notiDuplicateCode.vue';
 import NotiCloseDialog from '../notifications/notiCloseDialog.vue';
 import NotiEmptyValue from '../notifications/notiEmptyValue.vue';
+import ComboboxAutoComplete from '../combobox/comboboxAutoComplete.vue'
 
 export default {
     components:{
         NotiDuplicateCode,
         NotiCloseDialog,
         NotiEmptyValue,
+        ComboboxAutoComplete,
     },
     created(){
     },
@@ -223,6 +233,22 @@ export default {
         },
 
         /**
+         * lấy thống tin đơn vị từ serve về
+         * created by ndluc(14/02/2021)
+         */
+        getDepartments(){
+            axios
+                .get("https://localhost:44372/api/v1/Departments")
+                .then((res)=>{
+                    this.departments = res.data;
+                })
+                .catch((error)=>{
+                    //debugger;//eslint-disable-line no-debugger
+                    this.failRes = error.response.data.userMsg;
+                    this.isShowNoti = true;
+                })
+        },
+        /**
          * sự kiện chuột hover qua các ô không được để trống giá trị
          * created by ndluc(13/06/2021)
          */
@@ -257,7 +283,7 @@ export default {
                 this.isMissingEmployeeDepartment = false;
             }
         },
-        
+
         /**
          * Đóng thông báo giá trị bị để trống
          */
@@ -274,6 +300,7 @@ export default {
         },
         /**
          * Sự kiện click vào nút đóng dialog
+         * created by ndluc(14/06/2021)
          */
         CloDiaOnClick(){
             var checkEqual = true;
@@ -288,7 +315,7 @@ export default {
                 }
                 else if(this.employee[propName] != this.oldEmployee[propName]  && propName!= "__ob__" )
                 {
-                    debugger;//eslint-disable-line no-debugger
+                    //debugger;//eslint-disable-line no-debugger
                     this.isShowNotiCloseDialog = true;
                     checkEqual = false;
                     break;
@@ -415,12 +442,14 @@ export default {
             isShowNotiCloseDialog : false,// biến xác định đưa ra thông báo đóng dialog
             isSaveAndAdd : false, // biến kiểm tra việc chỉ lưu hay lưu và thêm
             isShowNotiEmptyValue: false,// biến xác nhận việc đưa ra thống báo giá trị bị trống.
+            departments : [], // mảng chứa thông tin phòng ban.
         } 
     },
     watch :{
         isShow(){
             if(this.isShow==true){
                this.$nextTick(()=> this.$refs.employeeCodeFocus.focus());
+               this.getDepartments();
             }
         },
        formMode(){

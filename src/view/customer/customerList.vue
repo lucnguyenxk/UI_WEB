@@ -10,7 +10,7 @@
             </div>
             <div  class="listEmployee">
             <div class=" toolbar">
-                <input type="text" name="name" value="" class="input-search" placeholder="tìm kiếm theo mã, tên khách hàng" ref="search" v-model="stringInput" @keyup="InputSearchString(stringInput)"/>
+                <input type="text" name="name" value="" class="input-search" placeholder="Tìm kiếm theo mã, tên khách hàng" ref="search" v-model="stringInput" @keyup="InputSearchString(stringInput)"/>
                 <button class="btn-refresh" @click="RefreshOnClick()"></button>
             </div>
             

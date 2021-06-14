@@ -69,13 +69,13 @@
                                             <p>Giới tính</p>
                                             <div class="GenRadio">
                                                 <input type="radio" id="male" name="gender" value="1" v-model="employee.gender">
-                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==1}" @click="RadioInputOnclick(1)" ></div>
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==1}" @click="radioInputOnclick(1)" ></div>
                                                 <label for="male">Nam</label><br>
                                                 <input type="radio" id="female" name="gender" value="0" v-model="employee.gender">
-                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==2}" @click="RadioInputOnclick(2)"></div>
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==2}" @click="radioInputOnclick(2)"></div>
                                                 <label for="female">Nữ</label><br>
                                                 <input type="radio" id="other" name="gender" value="2" v-model="employee.gender">
-                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==0}" @click="RadioInputOnclick(0)"></div>
+                                                <div class="RadioInput" :class="{'RadioCheck':employee.gender==0}" @click="radioInputOnclick(0)"></div>
                                                 <label for="other">Khác</label>
                                             </div>
                                         </div>
@@ -227,7 +227,8 @@ export default {
                 this.isShowNotiCloseDialog = false;
             }
         },
-        RadioInputOnclick(data){
+        radioInputOnclick(data){
+            this.genderValue = data;
             this.employee.gender = data;
             console.log(this.employee.gender);
         },
@@ -449,7 +450,8 @@ export default {
         isShow(){
             if(this.isShow==true){
                this.$nextTick(()=> this.$refs.employeeCodeFocus.focus());
-               this.getDepartments();
+                this.getDepartments();
+               
             }
         },
        formMode(){

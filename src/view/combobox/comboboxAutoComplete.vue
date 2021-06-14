@@ -13,6 +13,7 @@
         v-model="label_value"
         @click="isShow = true"
         @input="FilterData"
+        ref="inputComplete"
       />
 
       <div class="icon-item" @click="ToggleOnClick" >
@@ -122,6 +123,9 @@ export default {
     ToggleOnClick() {
       this.data_filter = this.options;
       this.isShow = !this.isShow;
+      if(this.isShow){
+        this.$refs.inputComplete.focus();
+      }
     },
     /**
      * Sự kiện Press vào Enter
@@ -161,18 +165,26 @@ export default {
      * created by ndluc (11/06/2021)
      */
     GetDefaultValue() {
-      debugger // eslint-disable-line no-debugger
+      //debugger // eslint-disable-line no-debugger
 
       //1. Gán giá trị mặc định của mảng
       this.data_filter = this.options;
-
       //2. Lấy giá trị mặc định
-      this.data_filter.forEach((option) => {
-        if (option[this.value_key] == this.defaultValue) {
-          this.label_value = option[this.label_key];
-          this.option_selected = option[this.value_key];
-        }
-      }); 
+      if(this.defaultValue == null)
+      {
+        this.label_value = null;
+        this.option_selected = null;
+      }
+      else
+      {
+          this.data_filter.forEach((option) => {
+          if (option[this.value_key] == this.defaultValue) {
+              this.label_value = option[this.label_key];
+              this.option_selected = option[this.value_key];
+          }
+          });
+      }
+       
     },
     /**
      * lấy tên giá trị được chọn
@@ -238,6 +250,12 @@ export default {
       isDialogShow(){
           if(this.isDialogShow){
               this.GetDefaultValue();
+          }
+      },
+      defaultValue(){
+          if(this.defaultValue==null){
+            this.option_selected = null;
+            this.label_value =null;
           }
       }
   }

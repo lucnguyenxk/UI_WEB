@@ -287,21 +287,26 @@ export default {
          * lấy dữ liệu vào gửi cho dialog khi thực hiện sửa dữ liệu
          * created by ndluc(13/06/2021)
          */
-        empOnClick(EmployeeId){
+        async empOnClick(EmployeeId){
             this.formMode="EDIT";
-            axios
+            await axios
             .get("https://localhost:44372/api/v1/Employees/"+EmployeeId)
             .then((res)=>{
-                var obj = res.data;
-                this.selectedEmp = obj;
-                this.oldEmployee = obj;
+                this.selectedEmp = res.data;
                 this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
-                this.oldEmployee.dateOfBirth=this.formatDateForDetail(this.oldEmployee.dateOfBirth);
-                this.isShowDialogDetail=true;
+                
             })
             .catch((res)=>{
                 console.log(res);
             })
+            // nhân bản đối tượng để kiểm tra việc dữ liệu có bị thay đối hay không.
+            this.oldEmployee = {};
+            var propsSelectedEmp = Object.getOwnPropertyNames(this.selectedEmp);
+            for(var i = 0; i < propsSelectedEmp.length; i++){
+                var propName = propsSelectedEmp[i];
+                this.oldEmployee[propName] = this.selectedEmp[propName];    
+            }
+            this.isShowDialogDetail=true;
         },
         TakeIdDel(employeeId){
                 this.isDelete = employeeId;

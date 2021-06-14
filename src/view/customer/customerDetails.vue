@@ -27,18 +27,18 @@
                                     <div class="Code_Name">
                                         <div class="Code_Emp">
                                             <p>Mã nhân viên <span>*</span></p>
-                                            <input type="text" class="CodeEmp" :class="{'MissingValue':isMissingEmployeeCode}" ref ="employeeCodeFocus" v-model="employee.employeeCode" @mouseover="mouseOverCode()" @mouseout="mouseOutCode()">
+                                            <input type="text" class="CodeEmp" :class="{'MissingValue':isMissingEmployeeCode}" ref ="employeeCodeFocus" v-model="employee.employeeCode" @mouseover="mouseOver('employeeCode')" @mouseout="mouseOut('employeeCode')">
                                             <p class="noti" :class="{'missing':!isMissingEmployeeCode}" >Mã không được trống!</p>
                                         </div>
                                         <div class="Name_Emp">
                                             <p>Tên nhân viên <span>*</span></p> 
-                                            <input type="text" @mouseover="MouseOverName()" @mouseout="MouseOutName()" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullName">
+                                            <input type="text" @mouseover="mouseOver('fullName')" @mouseout="mouseOut('fullName')" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullName">
                                             <p class="noti" :class="{'missing':!isMissingNameEmp}" >Tên không được trống!</p>
                                         </div>
                                     </div>
                                     <div class="Group_Emp">
                                         <p>Đơn vị <span>*</span></p>
-                                        <select name="" id="Group" @mouseover="MouseOverGroup()" @mouseout="MouseOutGroup()" v-model="employee.departmentId" class="" :class="{ 'MissingValue':isMissingEmployeeDepartment}">
+                                        <select name="" id="Group" @mouseover="mouseOver('group')" @mouseout="mouseOut('group')" v-model="employee.departmentId" class="" :class="{ 'MissingValue':isMissingEmployeeDepartment}">
                                             <option value="7c4f14d8-66fb-14ae-198f-6354f958f4c0">Phòng nhân sự</option>
                                             <option value="45ac3d26-18f2-18a9-3031-644313fbb055">Phòng đào tạo</option>
                                             <option value="3f8e6896-4c7d-15f5-a018-75d8bd200d7c">Phòng hành chính</option>
@@ -194,14 +194,25 @@ export default {
         formMode:{type:String, default: "add"}, // mode kiểm tra xem công việc là thêm sửa hay xóa.
     },  
     methods: {
-
-        //Ẩn thông báo khi nhấn button close 
+        /**
+         * Ẩn thông báo dữ liệu bị thay đổi đồng thời kiểm tra xem người dùng có muốn lưu thay đổi hay không
+         * created by ndluc(14/06/2021)
+         */
         HideNotiCloseDialog(mode){
-            if(mode == "deny" || mode =="accept")
+            // nếu người dùng đồng ý lưu dữ liệu 
+            if(mode == "accept"){
+                this.isShowNotiCloseDialog = false;
+                this.isSaveAndAdd = false;
+                this.validateEmployee();
+                this.addOrUpdateEmployee();
+            }
+            // người dùng không đồng ý lưu
+            else if(mode == "deny")
             {
                 this.isShowNotiCloseDialog = false;
                 this.$emit('hideDialog');
             }
+            //người dùng hủy lệnh đóng dialog
             else {
                 this.isShowNotiCloseDialog = false;
             }
@@ -210,52 +221,43 @@ export default {
             this.employee.gender = data;
             console.log(this.employee.gender);
         },
+
         /**
-         * sự kiện chuột hover qua ô nhập mã
+         * sự kiện chuột hover qua các ô không được để trống giá trị
          * created by ndluc(13/06/2021)
          */
-        mouseOverCode(){
-            this.isMissingEmployeeCode = true;
-        },
-        /**
-         * sự kiện chuột không còn hover qua ô nhập mã
-         * created by ndluc(13/06/2021)
-         */
-        mouseOutCode(){
-            this.isMissingEmployeeCode = false;
+        mouseOver(data){
+            if(data=="employeeCode")
+            {
+                this.isMissingEmployeeCode = true;
+            }
+            else if( data =="fullName")
+            {
+                this.isMissingNameEmp = true;
+            }
+            else if(data =="group"){
+                this.isMissingEmployeeDepartment = true;
+            }
         },
 
         /**
-         * sự kiện chuột hover qua ô nhập tên
+         * sự kiện chuột không còn hover qua các ô không được để trống giá trị
          * created by ndluc(13/06/2021)
          */
-        MouseOverName(){
-            this.isMissingNameEmp = true;
+        mouseOut(data){
+             if(data=="employeeCode")
+            {
+                this.isMissingEmployeeCode = false;
+            }
+            else if( data =="fullName")
+            {
+                this.isMissingNameEmp = false;
+            }
+            else if(data =="group"){
+                this.isMissingEmployeeDepartment = false;
+            }
         },
-
-        /**
-         * sự kiện chuột hover qua ô nhập phòng ban
-         * created by ndluc(13/06/2021)
-         */
-        MouseOverGroup(){
-            this.isMissingEmployeeDepartment = true;
-        },
-
-        /**
-         * sự kiện chuột không còn hover qua ô nhập tên
-         * created by ndluc(13/06/2021)
-         */
-        MouseOutName(){
-            this.isMissingNameEmp=false;
-        },
-
-        /**
-         * sự kiện chuột không còn hover qua ô nhập phòng ban
-         * created by ndluc(13/06/2021)
-         */
-        MouseOutGroup(){
-            this.isMissingEmployeeDepartment = false
-        },
+        
         /**
          * Đóng thông báo giá trị bị để trống
          */
@@ -274,19 +276,19 @@ export default {
          * Sự kiện click vào nút đóng dialog
          */
         CloDiaOnClick(){
-            //debugger;//eslint-disable-line no-debugger
             var checkEqual = true;
-            //var oldEmpProperty = Object.getOwnPropertyNames(this.oldEmployee);
             var empProperty = Object.getOwnPropertyNames(this.employee);
-            // if(oldEmpProperty.length != empProperty.length){
-            //    this.isShowNotiCloseDialog =true;
-            // }
-            for(var i= 0; i< empProperty.length-1; i++)
+            // Kiểm tra xem dữ liệu có bị thay đổi hay không? 
+            for(var i= 0; i< empProperty.length; i++)
             {
                var propName = empProperty[i];
-                if(this.employee[propName] != this.oldEmployee[propName])
+                if(this.oldEmployee[propName] == undefined && this.employee[propName]== "")
                 {
-                    //debugger;//eslint-disable-line no-debugger
+                    checkEqual = true;
+                }
+                else if(this.employee[propName] != this.oldEmployee[propName]  && propName!= "__ob__" )
+                {
+                    debugger;//eslint-disable-line no-debugger
                     this.isShowNotiCloseDialog = true;
                     checkEqual = false;
                     break;
@@ -412,7 +414,7 @@ export default {
             isShowNoti: false,
             isShowNotiCloseDialog : false,// biến xác định đưa ra thông báo đóng dialog
             isSaveAndAdd : false, // biến kiểm tra việc chỉ lưu hay lưu và thêm
-            isShowNotiEmptyValue: false,
+            isShowNotiEmptyValue: false,// biến xác nhận việc đưa ra thống báo giá trị bị trống.
         } 
     },
     watch :{

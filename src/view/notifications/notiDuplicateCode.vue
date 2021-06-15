@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         acceptNoti(){
-            this.$emit('hideNoti');
+            this.$emit('hideNotiDuplicateCode');
         }  
     },
 }

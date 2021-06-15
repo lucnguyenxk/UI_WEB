@@ -4,7 +4,7 @@
                 <div class="page-left "> Nhân viên </div>
                 <div class="page-right ">
                     <button class="btn-default" id="btn-add">
-                        <div id="text-btn-add" class="text-btn-add" @click="addCusOnClick()">Thêm mới nhân viên</div>
+                        <div id="text-btn-add" class="text-btn-add" @click="addEmployeeOnClick()">Thêm mới nhân viên</div>
                     </button>
                 </div>
             </div>
@@ -46,12 +46,12 @@
                                 <td class="funtion colum-fixed">
     
                                 <div class="updateEmp">
-                                    <button class = "update Employee" @click="empOnClick(emp.employeeId)">Sửa</button>
+                                    <button class = "update Employee" @click="editEmployeeOnClick(emp.employeeId)">Sửa</button>
                                 </div>
                                 <div class="listFuncEmp">
                                     <button class="listFunc Employee" @click="listFuncOnClick(emp.employeeId,emp.employeeCode)"></button>
                                     <ListFunction
-                                        :isShow="isShowListFunction && currentId == emp.employeeId"
+                                        :isShowListFunction="isShowListFunction && currentId == emp.employeeId"
                                         @hideListFuntion="hideListFuntion"
                                     />
                                 </div>
@@ -78,12 +78,12 @@
                 :oldEmployee="oldEmployee"
                 :employee="selectedEmp"
                 @hideDialog="hideDialog"
-                @AddMore="AddMore"
+                @addMoreEmployee="addMoreEmployee"
                 :isAddMore ="this.isAddMore"
             />
             <NotiDelete
             :isShowNotiDelete ="isShowNotiDelete"
-            @HideNotiDelete="HideNotiDelete"
+            @hideNotiDelete="hideNotiDelete"
             :idToDelete ="this.currentId"
             :empCodeToDelete="this.empCodeToDelete"
             />
@@ -259,25 +259,27 @@ export default {
             .catch((res)=>{
                 console.log(res);
             })
-            this.selectedEmp={employeeCode: this.selectedEmp.employeeCode , gender : 3};
-            this.oldEmployee ={employeeCode : this.oldEmployee.employeeCode, gender: 3};
+            
         },
 
         /**
          * hàm xử lí khi người dùng yêu cầu cất và thêm mới : lấy mã mới cho nhân viên mới và 1 số công việc khác
          * created by ndluc(14/06/2021)
          */
-        AddMore(){
-            this.getNewCode();
+        addMoreEmployee(){
+            debugger;// eslint-disable-line no-debugger
+            this.addEmployeeOnClick();
         },
 
         /**
          * hàm xử lí khi ấn vào nút thêm mới : hiện dialog và lấy mã mới cho nhân viên
          * created by ndluc(14/06/2021)
          */
-        addCusOnClick(){
+        async addEmployeeOnClick(){
             this.isShowDialogDetail= true;
-            this.getNewCode();
+            await this.getNewCode();
+            this.selectedEmp={employeeCode: this.selectedEmp.employeeCode , gender : 3};
+            this.oldEmployee ={employeeCode : this.oldEmployee.employeeCode, gender: 3};
         },
 
         /**
@@ -290,19 +292,34 @@ export default {
         },
 
         /**
-         * Ẩn các otiop tại ô chức năng
+         * Ẩn các otiop tại ô chức năng đồng thời thực hiện các option đã lựa chọn.
          * created by ndluc(14/06/2021)
          */
-        hideListFuntion(){
+        async hideListFuntion(data){
             this.isShowListFunction = false;
-            this.isShowNotiDelete = true;
+            // xóa nhân viên.
+            if(data =="delete"){
+                this.isShowNotiDelete = true;
+            }
+            // nhân bản nhân viên.
+            else if(data =="replication") {
+                //lấy code mới cho nhân viên nhân bản
+                await this.getNewCode();
+                var newEmployeeCode = this.selectedEmp.employeeCode;
+                // lấy thông tin của nhân viên được nhân bản
+                await this.getEmployeeById(this.currentId);
+                this.selectedEmp.employeeCode = newEmployeeCode;
+                this.oldEmployee.employeeCode = newEmployeeCode;
+                this.isShowDialogDetail = true;
+            }
+            
         },
 
         /**
          * ẩn thông báo muốn xóa nhân viên
          * created by ndluc(14/06/2021)
          */
-        HideNotiDelete(){
+        hideNotiDelete(){
             this.isShowNotiDelete = false;
             this.loadPaging();
         },
@@ -329,21 +346,21 @@ export default {
             return result
         },
 
+         
+
         /**
-         * lấy dữ liệu vào gửi cho dialog khi thực hiện sửa dữ liệu
-         * created by ndluc(13/06/2021)
+         * lấy thông tin nhân viên theo Id
+         * created by ndluc(15/06/2021)
          */
-        async empOnClick(EmployeeId){
+        async getEmployeeById(employeeId){
             // trước khi lấy dữ liệu nhân viên theo id thì lấy dữ liệu đơn vị trước
             await this.$refs.employeeDetail.getDepartments();
-            this.formMode="EDIT";
             //lấy dữ liệu nhân viên gửi cho dialog
             await axios
-            .get("https://localhost:44372/api/v1/Employees/"+EmployeeId)
+            .get("https://localhost:44372/api/v1/Employees/"+employeeId)
             .then((res)=>{
                 this.selectedEmp = res.data;
                 this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
-                
             })
             .catch((res)=>{
                 console.log(res);
@@ -355,6 +372,37 @@ export default {
                 var propName = propsSelectedEmp[i];
                 this.oldEmployee[propName] = this.selectedEmp[propName];    
             }
+        },
+
+        /**
+         * lấy dữ liệu vào gửi cho dialog khi thực hiện sửa dữ liệu
+         * created by ndluc(13/06/2021)
+         */
+        async editEmployeeOnClick(EmployeeId){
+            // set mode là sửa dữ liệu nhân viên
+            this.formMode="EDIT";
+            await this.getEmployeeById(EmployeeId);
+            // // trước khi lấy dữ liệu nhân viên theo id thì lấy dữ liệu đơn vị trước
+            // await this.$refs.employeeDetail.getDepartments();
+            
+            // //lấy dữ liệu nhân viên gửi cho dialog
+            // await axios
+            // .get("https://localhost:44372/api/v1/Employees/"+EmployeeId)
+            // .then((res)=>{
+            //     this.selectedEmp = res.data;
+            //     this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
+                
+            // })
+            // .catch((res)=>{
+            //     console.log(res);
+            // })
+            // // nhân bản đối tượng để kiểm tra việc dữ liệu có bị thay đối hay không.
+            // this.oldEmployee = {};
+            // var propsSelectedEmp = Object.getOwnPropertyNames(this.selectedEmp);
+            // for(var i = 0; i < propsSelectedEmp.length; i++){
+            //     var propName = propsSelectedEmp[i];
+            //     this.oldEmployee[propName] = this.selectedEmp[propName];    
+            // }
             this.isShowDialogDetail=true;
         },
     },

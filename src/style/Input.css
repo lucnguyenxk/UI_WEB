@@ -4,7 +4,7 @@ input{
     padding-left: 16px;
     color : #000000;
     border: 1px solid #bbbbbb;
-    border-radius: 3px;
+    border-radius: 2px;
     padding-top: 1px;
     padding-bottom: 1px;
     outline: 0;
@@ -12,6 +12,9 @@ input{
     font-family: GoogleSans-Regular;
 
 }
+    input:focus{
+        border: 1px solid #2ca01c !important;
+    } 
     .input-search:hover {
         border-color: #019160;
     }

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div  class="" :class="{'Funtion' :!isShow}">
+        <div  class="" :class="{'Funtion' :!isShowListFunction}">
             <div class="ListFun">
                 <div @click ="selectDelete()" class="li">Xoá</div>
-                <div class="li">Nhân Bản</div>
+                <div @click ="selectReplication()" class="li">Nhân Bản</div>
                 <div class="li">Ngưng sử dụng</div>
             </div>
         </div>
@@ -40,21 +40,18 @@ export default {
     created(){
     },
     props:{
-        isShow : {type: Boolean, default: false},
+        isShowListFunction : {type: Boolean, default: false},
         IdToDelete: {type : String, default: ""}
     },
     methods: {
         selectDelete(){
-            this.$emit('hideListFuntion');
-            console.log("đã ấn chọn xoá");
+            this.$emit('hideListFuntion',"delete");
+        },
+        selectReplication(){
+            this.$emit('hideListFuntion',"replication")
         }
     },
     watch : {
-        check(){
-            if(this.check.toString().length>0){
-                this.isShow=true;
-            }
-        }
     }
 }
 </script>

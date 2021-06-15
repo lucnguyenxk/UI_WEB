@@ -1,35 +1,36 @@
 <template>
   <div
     class="autocomplete"
-    v-click-outside="OnClickOutSide"
-    v-on:keyup.down="KeyDownOnPress"
-    v-on:keyup.enter="EnterOnPress"
-    v-on:keyup.up="KeyUpOnPress"
-    v-on:keydown.tab="HideOptions"
+    v-click-outside="onClickOutSide"
+    v-on:keyup.down="keyDownOnPress"
+    v-on:keyup.enter="entefOnPress"
+    v-on:keyup.up="keyUpOnPress"
+    v-on:keydown.tab="hideOptions"
   >
     <div class="select-label">
       <input
         class="label-value" :class="{'resultEmpty' : resultEmpty}"
         v-model="label_value"
         @click="isShow = true"
-        @input="FilterData"
+        @input="filterData"
         ref="inputComplete"
       />
 
-      <div class="icon-item" @click="ToggleOnClick" >
+      <div class="icon-item" @click="toggleOnClick" >
         <div class="icon-toggle" ></div>
       </div>
     </div>
     <div class="select-options" v-if="isShow">
+      <div class="title-options">TÊN PHÒNG BAN</div>
       <div
         ref="option"
         v-for="(item, index) in data_filter"
         :key="index"
         class="option"
-        @click="OptionOnClick(item)"
-        :class="{ 'is-selecting': index == index_Selecting , 'selected': option_selected == item[value_key]}"
+        @click="optionOnClick(item)"
+        :class="{ 'is-selecting': index == index_Selecting , 'selected': option_selected[value_key] == item[value_key]}"
         :id="index"
-        @mouseover="IsHover"
+        @mouseover="isHover"
       >
         {{ item[label_key] }}
       </div>
@@ -70,7 +71,7 @@ export default {
   data() {
     return {
       is_active: false,
-      option_selected: null,// đối tượng đã được chọn
+      option_selected: {},// đối tượng đã được chọn
       isShow: false, // Ẩn hiện Options
       index_Selecting: -1, // Chỉ số (STT) của thằng đang được chọn
       label_value: null, // Label Text value (Giá trị hiển thị của thằng đang được chọn)
@@ -85,31 +86,31 @@ export default {
      * sự kiện chuột đang hover vào option được chọn
      * created by ndluc (11/06/2021)
      */
-    IsHover(){
+    isHover(){
         this.is_hover = true;
     },
 
-    OnClickOutSide() {
+    onClickOutSide() {
       // debugger // eslint-disable-line no-debugger
     //   if(this.label_value.length ==0){
     //     this.resultEmpty = false
     //   }
-      this.HideOptions();
+      this.hideOptions();
     },
     //#region 1. Xử lý các sự kiện
     /**
      * Sự kiện click vào chọn Option
      * created by ndluc (11/06/2021)
      */
-    OptionOnClick(val) {
-      this.SetValue(val);
-      this.HideOptions();
+    optionOnClick(val) {
+      this.setValue(val);
+      this.hideOptions();
     },
     /**
      * Sự kiện Press vào phím mũi tên đi xuống chọn Option
      * created by ndluc (11/06/2021)
      */
-    KeyDownOnPress() {
+    keyDownOnPress() {
       this.index_Selecting++;
       if (this.index_Selecting > this.data_filter.length - 1) {
         this.index_Selecting = 0;
@@ -120,7 +121,7 @@ export default {
      * sự kiện ấn vào mũi tên trỏ xuống
      * created by ndluc (11/06/2021)
      */
-    ToggleOnClick() {
+    toggleOnClick() {
       this.data_filter = this.options;
       this.isShow = !this.isShow;
       if(this.isShow){
@@ -131,15 +132,15 @@ export default {
      * Sự kiện Press vào Enter
      * created by ndluc (11/06/2021)
      */
-    EnterOnPress() {
-      this.SetValue(this.data_filter[this.index_Selecting]);
-      this.HideOptions();
+    entefOnPress() {
+      this.setValue(this.data_filter[this.index_Selecting]);
+      this.hideOptions();
     },
     /**
      * Sự kiện Press mũi tên đi lên chọn Option
      * Created by ndluc (11/06/2021)
      */
-    KeyUpOnPress() {
+    keyUpOnPress() {
       this.index_Selecting--;
       if (this.index_Selecting < 0) {
         this.index_Selecting = this.data_filter.length - 1;
@@ -154,17 +155,76 @@ export default {
      * Xử lý thay đổi giá trị value
      * created by ndluc (11/06/2021)
      */
-    SetValue(val) {
-      this.$emit("input", this.GetValue(val));
+    setValue(val) {
+      this.$emit("input", this.getValue(val));
       this.label_value = val[this.label_key];
-      this.option_selected = val[this.value_key];
+      this.option_selected = val;
+    },
+
+    
+    /**
+     * lấy tên giá trị được chọn
+     */
+    getText() {
+      return this.label_value;
+    },
+
+
+    /**
+     * lấy giá trị được chọn
+     */
+    getValue(val) {
+      return val[this.value_key];
+    },
+
+
+    /**
+     * Hiện danh sách chọn
+     */
+    ShowOptions() {
+      this.isShow = true;
+    },
+
+
+    /**
+     * ẩn danh sách chọn
+     * created by ndluc (11/06/2021)
+    */
+    hideOptions() {
+      //debugger // eslint-disable-line no-debugger
+      this.isShow = false;
+      this.index_Selecting = -1;
+      // trường hợp chỉ điền không thích chọn
+      if(this.option_selected== null){
+         if(!this.checkDepartmentValue()&& this.label_value!= ""){
+            this.$emit("input","false")
+         }
+      }
+      else {
+        // trường hợp đã chọn nhưng lại viết lại thì xem giá trị viết lại có phù hợp hay không.
+        if(this.label_value != this.option_selected[this.label_key] && this.label_value !=""){
+            var optionselect = this.getOptionByName(this.label_value);
+            if(optionselect != null){
+              this.option_selected = optionselect;
+              this.$emit("input",this.option_selected[this.value_key])
+            }
+            else{
+              this.$emit("input","false")
+            }
+            
+        }
+        // phòng trường hợp xóa đi rồi viết lại giá trị ban đầu
+        else if(this.label_value ==this.option_selected[this.label_key]){
+          this.$emit("input",this.option_selected[this.value_key]);
+        }
+      }
     },
 
     /**
      * Khởi tạo lấy giá trị mặc định được truyền vào
      * created by ndluc (11/06/2021)
      */
-    GetDefaultValue() {
+    getDeFaultValue() {
       //debugger // eslint-disable-line no-debugger
 
       //1. Gán giá trị mặc định của mảng
@@ -173,51 +233,57 @@ export default {
       if(this.defaultValue == null)
       {
         this.label_value = null;
-        this.option_selected = null;
+        this.option_selected = {};
       }
       else
       {
           this.data_filter.forEach((option) => {
           if (option[this.value_key] == this.defaultValue) {
               this.label_value = option[this.label_key];
-              this.option_selected = option[this.value_key];
+              this.option_selected = option;
           }
           });
       }
        
     },
     /**
-     * lấy tên giá trị được chọn
+     * lấy đối tượng được chọn theo tên
+     * created by ndluc(15/06/2021)
      */
-    GetText() {
-      return this.label_value;
+    getOptionByName(name){
+      var obtionselect;
+      this.options.forEach((option)=>
+        {
+          if(option[this.label_key].toLowerCase() == name.toLowerCase())
+          {
+              obtionselect = option;
+          }    
+        }
+      )
+      return obtionselect;
     },
-    /**
-     * lấy giá trị được chọn
+
+     /**
+     * Kiểm tra giá trị phòng ban có hợp lệ hay không
+     * created by ndluc(2021)
      */
-    GetValue(val) {
-      return val[this.value_key];
+    checkDepartmentValue(){
+        //debugger // eslint-disable-line no-debugger
+        var isDepartmentValid = false;
+        this.options.forEach(option => {
+            if(option[this.label_key]!=null && this.label_value!=null && this.label_value!="" && option[this.label_key].toLowerCase()== this.label_value.toLowerCase()){
+                isDepartmentValid = true;
+                this.$emit("input", option[this.value_key])
+            }       
+        });
+        return isDepartmentValid;
     },
-    /**
-     * Hiện danh sách chọn
-     */
-    ShowOptions() {
-      this.isShow = true;
-    },
-    /**
-     * ẩn danh sách chọn
-     * created by ndluc (11/06/2021)
-    */
-    HideOptions() {
-      // debugger // eslint-disable-line no-debugger
-      this.isShow = false;
-      this.index_Selecting = -1;
-    },
+
     /**
      * lọc dữ liệu theo khóa tìm kiếm
      * created by ndluc (11/06/2021)
      */
-    FilterData() {
+    filterData() {
       this.ShowOptions();
       if (this.label_value.length == 0) {
         this.data_filter = this.options;
@@ -244,18 +310,32 @@ export default {
    * created by ndluc (11/06/2021)
    */
   created() {
-    //this.GetDefaultValue();
+    //this.getDeFaultValue();
   },
   watch:{
       isDialogShow(){
           if(this.isDialogShow){
-              this.GetDefaultValue();
+              this.getDeFaultValue();
           }
       },
+      /**
+       * set giá trị cho otion được chọn khi giá trị truyền vào null 
+       * created by ndluc(15/06/2021)
+       */
       defaultValue(){
           if(this.defaultValue==null){
-            this.option_selected = null;
+            this.option_selected[this.value_key] = null;
             this.label_value =null;
+          }
+      },
+      /**
+       * xử lí khi người dùng xóa giá trị trong input
+       * created by ndluc(15/06/2021)
+       */
+      label_value(){
+          if(this.label_value ==""){
+              this.option_selected[this.value_key] =null;
+              this.$emit("input", "");
           }
       }
   }
@@ -338,10 +418,11 @@ $icon-toggle: url("");
       left: 0;
       color: $color-default;
       @include Size(100%, 100%);
-      border-radius: 4px;
+      border-radius: 2px;
       border: 1px solid #bbbbbb;
       &:focus {
         outline: none;
+        border: 1px solid #2ca01c;
       }
     }
     .icon-item {
@@ -349,8 +430,12 @@ $icon-toggle: url("");
       right: 0px;
       @include Flex-Center;
       @include Size(30px, 100%);
+      cursor: pointer;
       .icon-toggle {
         @include Icon;
+      }
+      &:hover{
+        background-color: #e0dbdb;
       }
     }
   }
@@ -367,11 +452,19 @@ $icon-toggle: url("");
     overflow: hidden;
     border: $border;
     // box-sizing: border-box;
+
+    .title-options{
+        color: $color-default;
+        @include Size(100%,$height);
+        @include Flex-Center;
+        background-color: #f8f8f8
+    }
     /* -------- option ---------- */
     .option {
       @include Size(100%, $height);
       @include Flex-Center;
       color: $color-default;
+      
       &:hover {
         background: $background-hover;
         color: $color-hover;
@@ -386,7 +479,7 @@ $icon-toggle: url("");
 }
 
 .selected{
-  background-color: green !important;
+  background-color: #2ca01c !important;
   color: #fff !important;
 }
 .resultEmpty{

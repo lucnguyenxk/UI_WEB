@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         cacelDelete(){
-            this.$emit('HideNotiDelete')
+            this.$emit('hideNotiDelete')
         },
         acceptDelete(){
             console.log(this.idToDelete);
@@ -37,7 +37,7 @@ export default {
             .delete("https://localhost:44372/api/v1/Employees/"+this.idToDelete)
             .then((res)=>{
                 console.log(res);
-                this.$emit('HideNotiDelete')
+                this.$emit('hideNotiDelete')
             })
             .catch((res)=>{
                 console.log(res);

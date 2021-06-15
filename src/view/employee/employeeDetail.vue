@@ -18,7 +18,7 @@
                             </div>
                             <div class="Dialog-Header-Right">
                                 <button class="help-diacontent" @click="ocClickHelp()"></button>
-                                <button class="close-diacontent" @click="CloDiaOnClick()"></button>
+                                <button class="close-diacontent" @click="closeDiaOnClick()"></button>
                             </div>
                         </div>
                         <div class="Dialog-Body">
@@ -44,7 +44,11 @@
                                             <option value="3f8e6896-4c7d-15f5-a018-75d8bd200d7c">Phòng hành chính</option>
                                             <option value="78aafe4a-67a7-2076-3bf3-eb0223d0a4f7">Phòng Marketing</option>
                                         </select> -->
-                                        <ComboboxAutoComplete
+                                        <ComboboxAutoComplete 
+                                            ref="comboboxAutoComplete"
+                                            @mouseover.native="mouseOver('department')" 
+                                            @mouseout.native="mouseOut('department')"
+                                            :class="{'MissingValue':isMissingEmployeeDepartment}"
                                             :options="departments"
                                             value_key="departmentId"
                                             label_key="departmentName" 
@@ -132,10 +136,10 @@
                             </div>
                         </div>
                         <div class="Dialog-footer">
-                            <button class="btn-cancel" id="" @click="CancelDialog()">Huỷ</button>
+                            <button class="btn-cancel" id="" @click="cancelDialog()">Huỷ</button>
                             <div class="addAndSave">
-                                <button class="btn-cancel add" @click="addOnClick()" id="">Cất</button>
-                                <button class="btn-save_and_add" id="" @click="saveAndAddonClick()">Cất và Thêm</button>
+                                <button class="btn-cancel add" @click="addEmployeeOnClick()" id="">Cất</button>
+                                <button class="btn-save_and_add" id="" @click="saveAndAddEmployeeOnClick()">Cất và Thêm</button>
                             </div>
                         </div>
                     </div>
@@ -144,7 +148,7 @@
             <NotiDuplicateCode
             :notiMess="this.failRes"
             :isShowNoti ="this.isShowNoti"
-            @hideNoti ="hideNoti"
+            @hideNotiDuplicateCode ="hideNotiDuplicateCode"
             />
             <NotiCloseDialog
             :isShowNotiCloseDialog="isShowNotiCloseDialog"
@@ -177,7 +181,8 @@
     z-index: 1;
 }
 .MissingValue{
-    border-color: red !important;
+     border: 1px solid red !important ;
+     border-radius: 2px ;
 }
 </style>
 <script>
@@ -227,33 +232,23 @@ export default {
                 this.isShowNotiCloseDialog = false;
             }
         },
+
+        /**
+         * sự kiện chọn giới tính
+         * created by ndluc(14/06/2021)
+         */
         radioInputOnclick(data){
             this.genderValue = data;
             this.employee.gender = data;
-            console.log(this.employee.gender);
         },
 
-        /**
-         * lấy thống tin đơn vị từ serve về
-         * created by ndluc(14/02/2021)
-         */
-        getDepartments(){
-            axios
-                .get("https://localhost:44372/api/v1/Departments")
-                .then((res)=>{
-                    this.departments = res.data;
-                })
-                .catch((error)=>{
-                    //debugger;//eslint-disable-line no-debugger
-                    this.failRes = error.response.data.userMsg;
-                    this.isShowNoti = true;
-                })
-        },
+        
         /**
          * sự kiện chuột hover qua các ô không được để trống giá trị
          * created by ndluc(13/06/2021)
          */
         mouseOver(data){
+            //debugger; //eslint-disable-line no-debugger
             if(data=="employeeCode")
             {
                 this.isMissingEmployeeCode = true;
@@ -262,7 +257,7 @@ export default {
             {
                 this.isMissingNameEmp = true;
             }
-            else if(data =="group"){
+            else if(data =="department"){
                 this.isMissingEmployeeDepartment = true;
             }
         },
@@ -280,21 +275,32 @@ export default {
             {
                 this.isMissingNameEmp = false;
             }
-            else if(data =="group"){
+            else if(data =="department"){
                 this.isMissingEmployeeDepartment = false;
             }
         },
 
         /**
          * Đóng thông báo giá trị bị để trống
+         * created by ndluc(14/06/2021)
          */
         hideNotiEmptyValue(){
             this.isShowNotiEmptyValue = false;  
         },
-        hideNoti(){
+
+        /**
+         * Đóng thông báo bị trùng mã nhân viên
+         * created by ndluc(14/06/2021)
+         */
+        hideNotiDuplicateCode(){
             this.isShowNoti = false;
         },
-        CancelDialog(){
+
+        /**
+         * sự kiện hủy dialog
+         * created by ndluc(14/06/2021)
+         */
+        cancelDialog(){
             this.isMissingNameEmp = false;
             this.isMissingEmployeeDepartment=false;
             this.$emit('hideDialog');
@@ -303,7 +309,7 @@ export default {
          * Sự kiện click vào nút đóng dialog
          * created by ndluc(14/06/2021)
          */
-        CloDiaOnClick(){
+        closeDiaOnClick(){
             var checkEqual = true;
             var empProperty = Object.getOwnPropertyNames(this.employee);
             // Kiểm tra xem dữ liệu có bị thay đổi hay không? 
@@ -331,6 +337,7 @@ export default {
          * validate đối tượng trước khi thêm , sửa
          * created by ndluc(13/06/2021)
          */
+        
         validateEmployee(){
             //debugger; //eslint-disable-line no-debugger
             if(this.employee.employeeCode==""){
@@ -343,11 +350,19 @@ export default {
                 this.isShowNotiEmptyValue =true;
                 this.notiEmptyValue = "Tên nhân viên không được để trống."
             }
-            else if(this.employee.departmentId==""||this.employee.departmentId==null){
+            else if(this.employee.departmentId=="false")
+            {
+                this.validate = false;
+                this.isShowNotiEmptyValue = true;
+                this.notiEmptyValue = "Phòng ban không hợp lệ,vui lòng kiểm tra lại."
+            }
+            else if(this.employee.departmentId==""|| this.employee.departmentId==null){
                 this.validate = false;
                 this.isShowNotiEmptyValue = true;
                 this.notiEmptyValue = "Phòng ban không được để trống."
             }
+           
+            
             else{
                 this.validate = true;
             }
@@ -365,7 +380,6 @@ export default {
          * created by ndluc(13/06/2021)
          */
         addOrUpdateEmployee(){
-        
             if(this.validate) 
             {
                 if(this.formMode=="add"){
@@ -373,7 +387,7 @@ export default {
                     .post("https://localhost:44372/api/v1/Employees",this.employee)
                     .then((res)=>{
                         if(this.isSaveAndAdd){
-                            this.$emit('AddMore');
+                            this.$emit('addMoreEmployee');
                         }
                         else{
                             this.$emit('hideDialog');
@@ -381,7 +395,6 @@ export default {
                         console.log(res)
                     })
                     .catch((error)=>{
-                            //debugger;//eslint-disable-line no-debugger
                             this.failRes = error.response.data.userMsg;
                             this.isShowNoti = true;
                     })
@@ -391,7 +404,7 @@ export default {
                     .put("https://localhost:44372/api/v1/Employees/"+this.employee.employeeId,this.employee)
                     .then((res)=>{
                         if(this.isSaveAndAdd){
-                            this.$emit('AddMore');
+                            this.$emit('addMoreEmployee');
                         }
                         else{
                             this.$emit('hideDialog');
@@ -405,21 +418,43 @@ export default {
                 }
             }
         },
+
         /**
-         * Lưu đối tượng và thêm mới
+         * lấy thống tin đơn vị từ serve về
+         * created by ndluc(14/02/2021)
+         */
+        getDepartments(){
+            axios
+                .get("https://localhost:44372/api/v1/Departments")
+                .then((res)=>{
+                    this.departments = res.data;
+                })
+                .catch((error)=>{
+                    //debugger;//eslint-disable-line no-debugger
+                    this.failRes = error.response.data.userMsg;
+                    this.isShowNoti = true;
+                })
+        },
+
+        
+
+        /**
+         * thực hiện công việc khi ấn nút thêm mới và cất
          * created by ndluc(13/06/2021)
          */
-        saveAndAddonClick(){
+        saveAndAddEmployeeOnClick(){
+            this.setFocus = !this.setFocus;
             this.isSaveAndAdd = true;
+
             this.validateEmployee();
             this.addOrUpdateEmployee();
         },
 
         /**
-         * Thực hiện lưu đối tượng
+         * Thực hiện công việc khi ấn cất
          * created by ndluc(13/06/2021)
          */
-        addOnClick(){
+        addEmployeeOnClick(){
             this.isSaveAndAdd = false;
             this.validateEmployee();
             this.addOrUpdateEmployee();
@@ -428,7 +463,6 @@ export default {
     },
     data() {
         return {
-            count:0,
             missing : false,
             isMissingEmployeeDepartment :false,// biến kiểm tra phòng ban có trống hay không
             isMissingNameEmp :false,// biến kiểm tra tên có bị trốn hay không
@@ -444,21 +478,32 @@ export default {
             isSaveAndAdd : false, // biến kiểm tra việc chỉ lưu hay lưu và thêm
             isShowNotiEmptyValue: false,// biến xác nhận việc đưa ra thống báo giá trị bị trống.
             departments : [], // mảng chứa thông tin phòng ban.
+            setFocus: false, // biến dùng để điều khiển việc set focus vào ô mã nhân viên.l
         } 
     },
+    mounted(){
+        
+    },
     watch :{
+
+        /**
+         * set focus khi mở form và lấy dữ liệu phòng ban
+         * created by ndluc(15/06/2021)
+         */
         isShow(){
             if(this.isShow==true){
                this.$nextTick(()=> this.$refs.employeeCodeFocus.focus());
                 this.getDepartments();
-               
             }
         },
-       formMode(){
-           if(this.formMode=="add"){
-               this.$nextTick(()=> this.$refs.employeeCodeFocus.focus());
-           }
-       }
+
+        /**
+         * set focus mặc định vào ô mã nhân viên khi có form mới.
+         * created by ndluc(15/06/2021)
+         */
+        setFocus(){
+            this.$refs.employeeCodeFocus.focus();
+        }
     }
 }
 </script>

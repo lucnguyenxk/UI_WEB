@@ -12,17 +12,18 @@
 
 .menu .menu-top{
     display : flex;
-    height : 60px;
+    height : 48px;
     width: 100%;
     align-items: center;
+    justify-content: center;
+    padding-bottom: 14px;
 }
 .img-list {
     background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -428px -92px;
-    height : 30px;
-    width : 30px;
-    margin-left : 18px;
-    margin-top: 15px;
+    height : 24px;
+    width : 24px;
     cursor: pointer;
+    margin-right: 10px;
 }
 .img-logo {
     height: 45px;
@@ -37,7 +38,7 @@
 .item {
     color: #fff;
     display: flex;
-    height: 44px;
+    height: 42px;
     align-items: center;
 }
     .item:hover {
@@ -51,8 +52,42 @@
     background-position:center;
     background-repeat:no-repeat;
 }
+
 .dashboard{
-    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -33px -1587px;
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -33px -1630px;
+}
+.cash{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -78px -1631px;
+}
+.deposits{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -427px -1634px;
+}
+.purchase{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -165px -1632px;
+}
+.sell{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -206px -1631px;
+}
+.orderManager{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -254px -1632px;
+}
+.wareHouse{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -294px -1632px;
+}
+.tool{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -339px -1633px;
+}
+.fixedAssets{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -382px -1632px;
+}
+.tax{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -427px -1634px;
+}
+.price{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -471px -1633px;
+}
+.synthetic{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -514px -1632px;
 }
 .report{
     background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -552px -1593px;

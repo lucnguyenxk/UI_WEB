@@ -10,8 +10,9 @@
             </div>
             <div  class="listEmployee">
             <div class=" toolbar">
-                <input type="text" name="name" value="" class="input-search" placeholder="Tìm kiếm theo mã, tên khách hàng" ref="search" v-model="stringInput" @keyup="InputSearchString(stringInput)"/>
+                <input type="text" name="name" value="" class="input-search" placeholder="Tìm kiếm theo mã, tên nhân viên"  v-model="stringInput" @keyup="InputSearchString(stringInput)"/>
                 <button class="btn-refresh" @click="RefreshOnClick()"></button>
+                <button class="exportFileExcel" @click="exportFileExcel()"></button>
             </div>
             
             <div class="grid">
@@ -28,11 +29,11 @@
                             <th>CHỨC VỤ</th>
                             <th>PHÒNG BAN</th>
                             <th class="colum-BankCount"> STK NGÂN HÀNG</th>
-                            <th class="colum-fixed">CHỨC NĂNG</th>
+                            <th class="colum-fixed" :style="{'z-index':101}">CHỨC NĂNG</th>
                         </tr>
                     </thead>
                     <tbody>
-                            <tr v-for="emp in this.employees" :key="emp.employeeId"  >
+                            <tr v-for="(emp,index) in this.employees" :key="emp.employeeId"  >
                                 <td><input type="checkbox" name="" id="" class="inputCheckbox"></td>
                                 <td>{{emp.employeeCode}}</td>
                                 <td>{{emp.fullName}}</td>
@@ -43,7 +44,7 @@
                                 <td>{{emp.position}}</td>
                                 <td>{{emp.departmentName}}</td>
                                 <td class="colum-BankCount" >{{emp.bankAccountNumber}}</td>
-                                <td class="funtion colum-fixed">
+                                <td class="funtion colum-fixed" :style="{'z-index':100-index} ">
     
                                 <div class="updateEmp">
                                     <button class = "update Employee" @click="editEmployeeOnClick(emp.employeeId)">Sửa</button>
@@ -223,7 +224,13 @@ export default {
          */
         RefreshOnClick(){
             this.loadPaging();
-
+        },
+        /**
+         * xuất khẩu file excel
+         * created by ndluc(16/04/2021)
+         */
+        exportFileExcel(){
+            window.open("https://localhost:44372/api/v1/Employees/Export"); 
         },
 
         /**
@@ -259,7 +266,6 @@ export default {
             .catch((res)=>{
                 console.log(res);
             })
-            
         },
 
         /**
@@ -341,7 +347,7 @@ export default {
          */
         formatDateForDetail(data){
             var date = data + "";
-            if(date=="null") return "";
+            if(date=="null") return null;
             var result = date.substr(0,4) +"-"+ date.substr(5,2)+"-"+date.substr(8,2);
             return result
         },
@@ -360,7 +366,9 @@ export default {
             .get("https://localhost:44372/api/v1/Employees/"+employeeId)
             .then((res)=>{
                 this.selectedEmp = res.data;
+                console.log(this.selectedEmp);
                 this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
+                console.log(this.selectedEmp.dateOfBirth)
             })
             .catch((res)=>{
                 console.log(res);

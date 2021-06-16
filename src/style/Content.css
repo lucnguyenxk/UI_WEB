@@ -4,7 +4,7 @@
     right: 0;
     top: 50px;
     bottom: 0;
-    padding:16px;
+    padding-left: 20px;
     background-color: #f4f5f8;
 }
 .Funtion{
@@ -15,15 +15,19 @@
     display: flex;
     justify-content: space-between;
     align-items : center;
-    height : 60px;
+    height : 40px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-right: 30px;
 }
 .page-title .page-left{
   
-    font-weight : bold;
+    font-weight : 700;
     font-size: 24px;
 }
 .listEmployee {
     background-color: #ffffff;
+    margin-right: 30px;
 }
 .icon-add{
     width :15px;
@@ -41,52 +45,43 @@
 
 }
 .toolbar{
-    padding-top: 20px;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 10px;
     display:flex;
     align-items: center;
-    padding-right: 10px;
     justify-content: flex-end;
     
 }
 .input-search{
-        width:250px ;
+        width:240px ;
         background-image: url("../assets/icon/search.png");
         background-position-y: center;
-        background-position-x: 240px;
+        background-position-x: 220px;
         background-size: 16px;
         background-repeat: no-repeat;
         padding-left: 10px;
         color: #000000;
-        margin-right: 50px;
+        margin-right: 12px;
+        height: 32px;
+        box-sizing: border-box;
 }
-.btn-delete {
-    background-color: initial;
-    position: absolute;
-    right : 60px;
-    width: auto;
-    height: 40px;
-    background-size: auto;
-    background-position: center;
-    border: 1px solid #bbbbbb;
-    border-radius: 4px;
-    cursor: pointer;
-    outline: none;
-    color: black;
-    padding-left: 10px;
-    padding-right:10px;
-}
+
 .btn-refresh {
     background-color:  initial;
-    position: absolute;
-    right: 20px;
-    width: 40px;
-    height: 40px;
+    width: 21px;
+    height:23px;
     background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -425px -201px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     outline: none;
-    margin-top: 18px;
+    margin-right: 12px;
+}
+.exportFileExcel{
+    background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -705px -202px;
+    width: 23px;
+	height: 20px;
 }
 #GroupByDepartment{
     margin-left:20px ;
@@ -99,9 +94,8 @@
     padding-right: 12px;
 }
 table{
-    margin-top:15px ;
     border-collapse:collapse;
-    width: 100%;
+    min-width: 100%;
     
     text-align-last:left;
 }
@@ -112,16 +106,19 @@ table{
     }
 th{
     
-    background-color:#eceef1;
+    background-color:#eceef1 !important;
     font-weight:900;
     color:#000000;
     position: sticky;
     top: 0;
     z-index: 2;
+    border-right: 1px solid #c7c7c7 !important;
+    border-bottom: 1px solid #c7c7c7;
 }
 th, td{
-    padding-left:5px;
+    padding-left: 5px;
     border-right : 1px dotted #c7c7c7;
+
 }
     th:first-child, th:last-child, td:first-child, td:last-child {
         padding-left: 10px;
@@ -133,8 +130,9 @@ th, td{
     margin-top: 10px;
     height: 60vh;
     overflow-y: scroll;
-    padding-left: 10px;
+    padding-left: 16px;
     padding-right: 10px;
+    scrollbar-width: none;
 }
 .colum-Email{
     width: 100px !important;
@@ -148,6 +146,18 @@ th, td{
 .funtion{
     display: flex;
     position: relative;
+}
+
+.colum-fixed{
+    position:sticky;
+    border-right: none !important;
+    right: -10px;
+    border-left: 1px dotted #c7c7c7;
+    z-index: 2;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    height: 48px !important;
+
 }
 .Employee{
     margin-left:8px ;

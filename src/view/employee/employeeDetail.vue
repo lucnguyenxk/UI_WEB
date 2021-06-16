@@ -48,7 +48,6 @@
                                             ref="comboboxAutoComplete"
                                             @mouseover.native="mouseOver('department')" 
                                             @mouseout.native="mouseOut('department')"
-                                            :class="{'MissingValue':isMissingEmployeeDepartment}"
                                             :options="departments"
                                             value_key="departmentId"
                                             label_key="departmentName" 
@@ -339,7 +338,6 @@ export default {
          */
         
         validateEmployee(){
-            //debugger; //eslint-disable-line no-debugger
             if(this.employee.employeeCode==""){
                 this.validate = false;
                 this.isShowNotiEmptyValue = true;
@@ -412,6 +410,7 @@ export default {
                         console.log(res)
                     })
                     .catch((error)=>{
+                        debugger;//eslint-disable-line no-debugger
                         this.failRes = error.response.data.userMsg;
                         this.isShowNoti = true; 
                     })
@@ -445,9 +444,12 @@ export default {
         saveAndAddEmployeeOnClick(){
             this.setFocus = !this.setFocus;
             this.isSaveAndAdd = true;
-
-            this.validateEmployee();
-            this.addOrUpdateEmployee();
+            var o = this;
+            setTimeout(function () {
+                console.log("Hi Bro, SetTimeout is working fine.");
+                o.validateEmployee();
+                o.addOrUpdateEmployee();
+            }, 30);
         },
 
         /**
@@ -455,9 +457,14 @@ export default {
          * created by ndluc(13/06/2021)
          */
         addEmployeeOnClick(){
+            var o = this;
             this.isSaveAndAdd = false;
-            this.validateEmployee();
-            this.addOrUpdateEmployee();
+            setTimeout(function () {
+                console.log("Hi Bro, SetTimeout is working fine.");
+                o.validateEmployee();
+                o.addOrUpdateEmployee();
+            }, 30);
+            
             
         },
     },

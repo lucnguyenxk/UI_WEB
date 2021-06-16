@@ -3,7 +3,7 @@
     class="autocomplete"
     v-click-outside="onClickOutSide"
     v-on:keyup.down="keyDownOnPress"
-    v-on:keyup.enter="entefOnPress"
+    v-on:keyup.enter="enterOnPress"
     v-on:keyup.up="keyUpOnPress"
     v-on:keydown.tab="hideOptions"
   >
@@ -132,8 +132,10 @@ export default {
      * Sự kiện Press vào Enter
      * created by ndluc (11/06/2021)
      */
-    entefOnPress() {
-      this.setValue(this.data_filter[this.index_Selecting]);
+    enterOnPress() {
+      if(this.index_Selecting >= 0){
+          this.setValue(this.data_filter[this.index_Selecting]);
+      }
       this.hideOptions();
     },
     /**
@@ -194,29 +196,35 @@ export default {
       //debugger // eslint-disable-line no-debugger
       this.isShow = false;
       this.index_Selecting = -1;
+
+      if(this.label_value ==""){
+        this.$emit("input","")
+      }
       // trường hợp chỉ điền không thích chọn
-      if(this.option_selected== null){
+      else if(this.option_selected== null && this.label_value !=null){
          if(!this.checkDepartmentValue()&& this.label_value!= ""){
             this.$emit("input","false")
+            this.resultEmpty = true;
          }
       }
-      else {
+      else if(this.label_value!=null) {
         // trường hợp đã chọn nhưng lại viết lại thì xem giá trị viết lại có phù hợp hay không.
-        if(this.label_value != this.option_selected[this.label_key] && this.label_value !=""){
+        //if(this.label_value != this.option_selected[this.label_key] && this.label_value !=""){
             var optionselect = this.getOptionByName(this.label_value);
             if(optionselect != null){
               this.option_selected = optionselect;
               this.$emit("input",this.option_selected[this.value_key])
             }
             else{
-              this.$emit("input","false")
+              this.$emit("input","false");
+              this.resultEmpty = true;
             }
             
-        }
+        //}
         // phòng trường hợp xóa đi rồi viết lại giá trị ban đầu
-        else if(this.label_value ==this.option_selected[this.label_key]){
-          this.$emit("input",this.option_selected[this.value_key]);
-        }
+        // else if(this.label_value ==this.option_selected[this.label_key]){
+        //   this.$emit("input",this.option_selected[this.value_key]);
+        // }
       }
     },
 
@@ -254,7 +262,7 @@ export default {
       var obtionselect;
       this.options.forEach((option)=>
         {
-          if(option[this.label_key].toLowerCase() == name.toLowerCase())
+          if(name!=null && name != "" && option[this.label_key].toLowerCase() == name.toLowerCase())
           {
               obtionselect = option;
           }    
@@ -337,6 +345,9 @@ export default {
               this.option_selected[this.value_key] =null;
               this.$emit("input", "");
           }
+          else if(this.label_value == null || this.label_value !=""){
+            this.resultEmpty = false;
+          }
       }
   }
 };
@@ -408,6 +419,7 @@ $icon-toggle: url("");
     position: absolute;
     @include Size(100%, 100%);
     @include Flex-Center;
+    
 
     .label-value {
       position: absolute;
@@ -424,6 +436,9 @@ $icon-toggle: url("");
         outline: none;
         border: 1px solid #2ca01c;
       }
+      &:hover{
+        border: 1px solid red !important;
+      }
     }
     .icon-item {
       position: absolute;
@@ -435,7 +450,7 @@ $icon-toggle: url("");
         @include Icon;
       }
       &:hover{
-        background-color: #e0dbdb;
+        background-color: #e0e0e0;
       }
     }
   }
@@ -451,6 +466,7 @@ $icon-toggle: url("");
     border-radius: 4px;
     overflow: hidden;
     border: $border;
+    
     // box-sizing: border-box;
 
     .title-options{

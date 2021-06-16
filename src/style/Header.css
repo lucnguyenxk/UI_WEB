@@ -1,12 +1,11 @@
 #header {
     position: absolute;
     display: flex;
-    left: 200px;
+    left: 180px;
     top: 0;
     right: 0;
-    height: 60px;
+    height: 48px;
     align-items: center;
-    border-bottom: 1px solid #808080;
     justify-content: space-between;
     font-weight: bold;
 }
@@ -18,7 +17,7 @@
     cursor: pointer;
 }
 .name-res{
-    padding-left :30px;
+    padding-left :10px;
     display : flex;
 }
 .user-in4{

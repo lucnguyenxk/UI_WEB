@@ -14,8 +14,8 @@
     display: none;
 }
 .ListFun{
-    width: 110px;
-    height: 65px;
+    width: 120px;
+    height: 90px;
     border: 1px solid #bbbbbb;
     position: absolute;
     top: 27px;
@@ -24,9 +24,12 @@
     z-index: 1;
 }
 .li{
-    margin-top: 3px;
     position: relative;
-    padding-left: 3px;
+    padding-left: 10px;
+    height: 20px;
+    padding-top : 5px;
+    padding-bottom: 5px;
+
 }
 .li:hover {
     background-color: #f4f5f8;

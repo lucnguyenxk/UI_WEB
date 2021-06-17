@@ -1,12 +1,14 @@
 <template>
     <div>
          <div class="pos-page">
-                    <select name="" id="NRPP" v-model="selectPageSize" @change="selectPageSizeOnClick(selectPageSize)">
-                        <option value="20">20 bản ghi một trang</option>
-                        <option value="50">50 bản ghi một trang</option>
-                        <option value="100">100 bản ghi một trang</option>
-                    </select>
-                    <button class="btn-forward first" @click="PreOnClick()">Trước</button> 
+                    <Combobox
+                        :options="arrayPageSize"
+                        value_key="pageSize"
+                        label_key="pageSizeTitle" 
+                        :defaultValue="PageSizedDefault"
+                        v-model="PageSize"
+                    />
+                    <button class="btn-forward first" @click="PreOnClick()" :class="{'hiden':this.currentPage ==1}">Trước</button> 
                     <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageOne  }" @click="PageOneOnClick()">{{this.pageOne}}</button>
                     <button class="paging threeDots" :class="{'displayThreeDotsFirst':(this.pagePreMid==2) || this.pageLast < 5}" @click="DotFrontOnclick()" >...</button>
                     <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pagePreMid, 'display': this.pageLast <2 }" @click="PagePreMidOnClick()">{{this.pagePreMid}}</button>
@@ -14,58 +16,16 @@
                     <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageBehMid, 'display' :this.pageLast <4}" @click="PageBehMidOnClick()">{{this.pageBehMid}}</button>
                     <button class="paging threeDots" :class="{'displayThreeDotsFirst':(this.pageBehMid ==this.pageLast-1) || this.pageLast < 5}" @click="DotBehindOnclick()">...</button>
                     <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageLast , 'display' : this.pageLast < 5}" @click="PageLastOnClick()">{{this.pageLast}}</button>
-                    <button class="btn-forward next" @click="NextOnClick()">Sau</button>
+                    <button class="btn-forward next" @click="NextOnClick()" :class="{'hiden':this.currentPage ==this.pageLast}">Sau</button>
         </div>
     </div>
 </template>
-<style>
-.pos-page{
-    display: flex;
-    justify-content : center;
-    align-items: center;
- }
-#NRPP{
-    margin-right: 10px;
-    height: 30px;
-}
-.paging {
-    width: 22px;
-    height: 22px;
-    background-color:#ffffff;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin: 5px;
-    outline: none;
-    color: #080808 ;
-    padding: 0;
-    align-items: center;
-    justify-content: center;
-}
-      
-.threeDots{
-    font-weight: 900;
-}
-.displayThreeDotsFirst{
-    display: none;
-}
-.IsActive{
-    font-weight: bold;
-    border: 1px solid #0e0d0d;
-}
-.btn-forward{
-    width: 40px;
-    height: 30px;
-    border: none;
-    color: #000;
-    background-color: #ffffff;
-}
-.display {
-    display: none;
-}
-</style>
+
 <script>
+import Combobox from '../combobox/combobox.vue'
 export default {
     components:{
+        Combobox,
     },
     props :{
         pageLast :{type:Number, default : 1}
@@ -80,18 +40,15 @@ export default {
             pageBehMid:4,
             currentPage:1,
             PageSize:20,
-            selectPageSize:20
+            PageSizedDefault:20,
+            arrayPageSize:[
+                { pageSizeTitle: "20 bản ghi trên 1 trang" ,pageSize : 20},
+                { pageSizeTitle: "50 bản ghi trên 1 trang" ,pageSize : 50},
+                {pageSizeTitle: "100 bản ghi trên 1 trang" ,pageSize : 100},
+            ]
         }
     },
     methods :{
-        selectPageSizeOnClick(selectPageSize){
-            this.PageSize = selectPageSize;
-            this.currentPage = 1;
-            this.pagePreMid =2;
-            this.pageMid=3;
-            this.pageBehMid = 4;
-            this.$emit("LoadFromPag",this.currentPage,this.PageSize);
-        },
         PreOnClick(){
             if (this.currentPage > 1){
                 this.currentPage= this.currentPage-1;
@@ -164,7 +121,65 @@ export default {
                 this.pageMid = this.pageMid+2;
             }
         },
+    },
+    watch :{
+        PageSize(){
+            this.currentPage = 1;
+            this.pagePreMid =2;
+            this.pageMid=3;
+            this.pageBehMid = 4;
+            this.$emit("LoadFromPag",this.currentPage,this.PageSize);
+        }
     }
 
 }
 </script>
+<style>
+.pos-page{
+    display: flex;
+    justify-content : center;
+    align-items: center;
+ }
+#NRPP{
+    margin-right: 10px;
+    height: 30px;
+}
+.paging {
+    width: 22px;
+    height: 22px;
+    background-color:#ffffff;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 5px;
+    outline: none;
+    color: #080808 ;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+      
+.threeDots{
+    font-weight: 900;
+}
+.displayThreeDotsFirst{
+    display: none;
+}
+.IsActive{
+    font-weight: bold;
+    border: 1px solid #e0e0e0;
+    border-radius: 0% !important;
+}
+.btn-forward{
+    width: 40px;
+    height: 30px;
+    border: none;
+    color: #000;
+    background-color: #ffffff;
+}
+.hiden{
+    color: #646262;
+}
+.display {
+    display: none;
+}
+</style>

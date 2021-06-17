@@ -19,33 +19,33 @@
                <table id="tbListCustomer" class="table" width =100% >
                     <thead>
                         <tr>
-                            <th><input type="checkbox" name="" id="" class="inputCheckbox"></th>
-                            <th>MÃ NHÂN VIÊN</th>
-                            <th>HỌ TÊN</th>
-                            <th class="colum-BankCount">GIỚI TÍNH</th>
-                            <th class="colum-DOB">NGÀY SINH</th>
-                            <th>ĐiỆN THOẠI</th>
-                            <th class="colum-Email">EMAIL</th>
-                            <th>CHỨC VỤ</th>
-                            <th>PHÒNG BAN</th>
-                            <th class="colum-BankCount"> STK NGÂN HÀNG</th>
-                            <th class="colum-fixed" :style="{'z-index':101}">CHỨC NĂNG</th>
+                            <th class="employeeInputCheckbox"><input type="checkbox" name="" id="" class="inputCheckbox"></th>
+                            <th class="employeeCode">MÃ NHÂN VIÊN</th>
+                            <th class="employeeFullName">HỌ TÊN</th>
+                            <th class="employeeGender">GIỚI TÍNH</th>
+                            <th class="employeeDOB">NGÀY SINH</th>
+                            <th class="employeePhoneNumber">ĐiỆN THOẠI</th>
+                            <th class="employeeEmail">EMAIL</th>
+                            <th class="employeePosition">CHỨC VỤ</th>
+                            <th class="employeeDepartment">PHÒNG BAN</th>
+                            <th class="employeeBankAccount"> STK NGÂN HÀNG</th>
+                            <th class="colum-fixed" :style="{'z-index':101}"> <div class="uiFuntion">CHỨC NĂNG</div> </th>
                         </tr>
                     </thead>
                     <tbody>
                             <tr v-for="(emp,index) in this.employees" :key="emp.employeeId"  >
-                                <td><input type="checkbox" name="" id="" class="inputCheckbox"></td>
-                                <td>{{emp.employeeCode}}</td>
-                                <td>{{emp.fullName}}</td>
-                                <td class="colum-BankCount">{{emp.genderName}}</td>
-                                <td>{{formatDate(emp.dateOfBirth)}}</td>
-                                <td>{{emp.phoneNumber}}</td>
-                                <td>{{emp.email}}</td>
-                                <td>{{emp.position}}</td>
-                                <td>{{emp.departmentName}}</td>
-                                <td class="colum-BankCount" >{{emp.bankAccountNumber}}</td>
+                                <td class="employeeInputCheckbox"><input type="checkbox" name="" id="" class="inputCheckbox"></td>
+                                <td class="employeeCode">{{emp.employeeCode}}</td>
+                                <td class="employeeFullName">{{emp.fullName}}</td>
+                                <td class="employeeGender">{{emp.genderName}}</td>
+                                <td class="employeeDOB">{{formatDate(emp.dateOfBirth)}}</td>
+                                <td class="employeePhoneNumber">{{emp.phoneNumber}}</td>
+                                <td class="employeeEmail">{{emp.email}}</td>
+                                <td class="employeePosition">{{emp.position}}</td>
+                                <td class="employeeDepartment">{{emp.departmentName}}</td>
+                                <td class="employeeBankAccount" >{{emp.bankAccountNumber}}</td>
                                 <td class="funtion colum-fixed" :style="{'z-index':100-index} ">
-    
+                                <div class="uiFuntion">
                                 <div class="updateEmp">
                                     <button class = "update Employee" @click="editEmployeeOnClick(emp.employeeId)">Sửa</button>
                                 </div>
@@ -55,6 +55,7 @@
                                         :isShowListFunction="isShowListFunction && currentId == emp.employeeId"
                                         @hideListFuntion="hideListFuntion"
                                     />
+                                </div>
                                 </div>
                                 
                             </td>

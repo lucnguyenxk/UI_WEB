@@ -10,8 +10,8 @@
             </div>
             <div  class="listEmployee">
             <div class=" toolbar">
-                <input type="text" name="name" value="" class="input-search" placeholder="Tìm kiếm theo mã, tên nhân viên"  v-model="stringInput" @keyup="InputSearchString(stringInput)"/>
-                <button class="btn-refresh" @click="RefreshOnClick()"></button>
+                <input type="text" name="name" value="" class="input-search" placeholder="Tìm kiếm theo mã, tên nhân viên"  v-model="stringInput" @keyup="inputSearchString(stringInput)"/>
+                <button class="btn-refresh" @click="refreshOnClick()"></button>
                 <button class="exportFileExcel" @click="exportFileExcel()"></button>
             </div>
             
@@ -66,9 +66,10 @@
             <div class="footer">
                <div class=" CountRecord"> Tổng số: <span class="totalRecord">{{this.totalRecord}}</span> bản ghi </div>
                 <Pagination
+                    :isSearch ="isSearch"
                     :currentPage="this.currentPage"
                     :pageLast="this.pageLast"
-                    @LoadFromPag ="LoadFromPag"
+                    @loadFromPag ="loadFromPag"
                 />
 
             </div>
@@ -108,33 +109,43 @@ export default {
     },
     created(){
         this.clickOutSize(); 
+
+        /**
+         * load dữ liệu có phân trang khi tạo trang
+         * created by ndluc(17/06/2021)
+         */
         this.loadPaging();
     },
     
     props:[],
     data() {
         return {
-            isShowDialogDetail : false,
-            employees : [],
-            formMode : "add",
-            selectedEmp:{},
-            oldEmployee: {},
-            isShowListFunction : false,
-            currentId : "",
-            isShowNotiDelete : false,
-            empCodeToDelete: "",
-            isAddMore : false,
-            pageLast: 1,
-            currentPage:1,
-            PageSize:20,
-            SearchString: "",
-            totalRecord :0,
-            stringInput : "",
-            selectPageSize : 20,
-
+            isShowDialogDetail : false,// kiểm tra việc đưa ra dialo cho người dùng.
+            employees : [],// danh sách nhân viên lấy được từ api
+            formMode : "add",// trạng thái là thêm, sửa ,..
+            selectedEmp:{},// đối tượng nhân viên được lựa chọn để thực hiện các thao tác thêm, sửa, ..
+            oldEmployee: {},// đối tượng nhân viên được lưu lại để so sánh sự thay đổi
+            isShowListFunction : false,// biến kiểm tra việc đưa ra danh sách chức năng
+            currentId : "",// biến giá trị của id nhân viên đang được lựa chọn
+            isShowNotiDelete : false,// biến kiểm tra việc đưa ra thông báo xóa nhân viên
+            empCodeToDelete: "",// biến lấy giá trị mã nhân viên để thực hiện xóa
+            isAddMore : false,// biến kiểm tra việc cất và thê,
+            pageLast: 1,// biến giá trị số trang cuối cùng hay tổng số trang
+            currentPage:1, // biến thể hiện số trang hiện tại
+            PageSize:20,// biến thể hiện giá trị kích cỡ trang khi thao tác
+            SearchString: "",// từ khóa dùng để gửi lên api tìm kiếm
+            totalRecord :0,// tổng số bản ghi khi tìm kiếm hoặc load trang
+            stringInput : "",// chuỗi tìm kiếm mặc định
+            selectPageSize : 20,// mặc định kích cỡ trang ban đầu là 20
+            isSearch:false, // biến kiểm tra việc có đang lọc dữ liệu hay không.
         }
     },  
     methods:{
+
+        /**
+         * xử lí sự kiện ấn bên ngoài ô chức năng
+         * created by ndluc(17/06/2021)
+         */
         clickOutSize(){
             var o = this; 
             window.addEventListener('click', function(e){   
@@ -160,80 +171,33 @@ export default {
          * sự kiện nhập chuỗi tìm kiếm : load lại trang theo khóa tìm kiếm có phân trang
          * created by ndluc(14/06/2021)
          */
-        InputSearchString(string){
+        async inputSearchString(string){
             this.SearchString = string;
             this.currentPage = 1;
             this.pageOne = this.currentPage;
-            this.loadPaging();
-            
+            this.isSearch =  true;
+            await this.loadPaging();
+            this.isSearch = false;
         },
 
         /**
          * load lại trang khi chọn số trang và kích cỡ trang:
          * created by ndluc(14/06/2021)
          */
-        LoadFromPag(currentPage, PageSize){
+        loadFromPag(currentPage, PageSize){
             this.currentPage = currentPage;
             this.PageSize = PageSize;
             this.loadPaging();
         },
 
         /**
-         * hàm load dữ liệu có phân trang
-         * created by ndluc(14/06/2021)
-         */
-        loadPaging(){
-            axios
-            .get("https://localhost:44372/api/v1/Employees/GetPaging?PageNumber="+this.currentPage+"&PageSize=" +this.PageSize +"&SearchString="+this.SearchString)
-            .then((res)=>{
-                this.employees = res.data;
-                if(this.employees.length> 0){
-                    this.totalRecord = this.employees[0].totalRecord;
-                    if(this.totalRecord % this.PageSize !=0){
-                        this.pageLast = (this.totalRecord -this.totalRecord % this.PageSize)/this.PageSize +1 ;
-                    }
-                    else{
-                        this.pageLast = (this.totalRecord -this.totalRecord % this.PageSize)/this.PageSize;
-                    }
-    
-                }
-                else this.totalRecord = 0;
-            })
-            .catch((res)=>{
-                console.log(res);
-            })
-        },
-
-        /**
-         * hàm lấy tất cả dữ liệu từ serve
-         * created by ndluc(14/06/2021)
-         */
-        loadData(){
-            axios
-            .get("https://localhost:44333/api/v1/Employees")
-            .then((res)=>{
-                this.employees = res.data;
-            })
-            .catch((res)=>{
-                console.log(res);
-            })
-        },
-
-        /**
          * hàm xử lí sự kiện ấn vào nút load lại dữ liệu trang : load lại dữ liệu có phân trang.
          * created by ndluc(14/06/2021)
          */
-        RefreshOnClick(){
+        refreshOnClick(){
             this.loadPaging();
         },
-        /**
-         * xuất khẩu file excel
-         * created by ndluc(16/04/2021)
-         */
-        exportFileExcel(){
-            window.open("https://localhost:44372/api/v1/Employees/Export"); 
-        },
-
+        
         /**
          * hàm xử lí khi ấn vào mũi tên ở ô chức năng : hiện ra các otionp để lựa chọn.
          * created by ndluc(14/06/2021)
@@ -250,43 +214,6 @@ export default {
                 this.currentId = id;
                 this.isShowListFunction =true;
             }
-        },
-
-        /**
-         * Hàm lấy mã mới cho nhân viên
-         * created by ndluc(13/06/2021)
-         */
-        async getNewCode(){
-            this.formMode="add";
-            await axios
-            .get("https://localhost:44372/api/v1/Employees/GetNewCode")
-            .then((res)=>{
-                this.selectedEmp.employeeCode = res.data;
-                this.oldEmployee.employeeCode = res.data;
-            })
-            .catch((res)=>{
-                console.log(res);
-            })
-        },
-
-        /**
-         * hàm xử lí khi người dùng yêu cầu cất và thêm mới : lấy mã mới cho nhân viên mới và 1 số công việc khác
-         * created by ndluc(14/06/2021)
-         */
-        addMoreEmployee(){
-            debugger;// eslint-disable-line no-debugger
-            this.addEmployeeOnClick();
-        },
-
-        /**
-         * hàm xử lí khi ấn vào nút thêm mới : hiện dialog và lấy mã mới cho nhân viên
-         * created by ndluc(14/06/2021)
-         */
-        async addEmployeeOnClick(){
-            this.isShowDialogDetail= true;
-            await this.getNewCode();
-            this.selectedEmp={employeeCode: this.selectedEmp.employeeCode , gender : 3};
-            this.oldEmployee ={employeeCode : this.oldEmployee.employeeCode, gender: 3};
         },
 
         /**
@@ -353,7 +280,84 @@ export default {
             return result
         },
 
+         /**
+         * hàm load dữ liệu có phân trang
+         * created by ndluc(14/06/2021)
+         */
+        loadPaging(){
+            axios
+            .get("https://localhost:44372/api/v1/Employees/GetPaging?PageNumber="+this.currentPage+"&PageSize=" +this.PageSize +"&SearchString="+this.SearchString)
+            .then((res)=>{
+                this.employees = res.data;
+                if(this.employees.length> 0){
+                    this.totalRecord = this.employees[0].totalRecord;
+                    if(this.totalRecord % this.PageSize !=0){
+                        this.pageLast = (this.totalRecord -this.totalRecord % this.PageSize)/this.PageSize +1 ;
+                    }
+                    else{
+                        this.pageLast = (this.totalRecord -this.totalRecord % this.PageSize)/this.PageSize;
+                    }
+    
+                }
+                else this.totalRecord = 0;
+            })
+            .catch((res)=>{
+                console.log(res);
+            })
+        },
+
+        /**
+         * hàm lấy tất cả dữ liệu từ serve
+         * created by ndluc(14/06/2021)
+         */
+        loadData(){
+            axios
+            .get("https://localhost:44333/api/v1/Employees")
+            .then((res)=>{
+                this.employees = res.data;
+            })
+            .catch((res)=>{
+                console.log(res);
+            })
+        },
+
+        /**
+         * Hàm lấy mã mới cho nhân viên
+         * created by ndluc(13/06/2021)
+         */
+        async getNewCode(){
+            this.formMode="add";
+            await axios
+            .get("https://localhost:44372/api/v1/Employees/GetNewCode")
+            .then((res)=>{
+                this.selectedEmp.employeeCode = res.data;
+                this.oldEmployee.employeeCode = res.data;
+            })
+            .catch((res)=>{
+                console.log(res);
+            })
+        },
+
+         /**
+         * hàm xử lí khi ấn vào nút thêm mới : hiện dialog và lấy mã mới cho nhân viên
+         * created by ndluc(14/06/2021)
+         */
+        async addEmployeeOnClick(){
+            await this.$refs.employeeDetail.getDepartments();
+            await this.getNewCode();
+            this.selectedEmp={employeeCode: this.selectedEmp.employeeCode , gender : 3};
+            this.oldEmployee ={employeeCode : this.oldEmployee.employeeCode, gender: 3};
+            this.isShowDialogDetail= true;
+        },
          
+        /**
+         * hàm xử lí khi người dùng yêu cầu cất và thêm mới : lấy mã mới cho nhân viên mới và 1 số công việc khác
+         * created by ndluc(14/06/2021)
+         */
+        addMoreEmployee(){
+            //debugger;// eslint-disable-line no-debugger
+            this.addEmployeeOnClick();
+        },
 
         /**
          * lấy thông tin nhân viên theo Id
@@ -391,28 +395,14 @@ export default {
             // set mode là sửa dữ liệu nhân viên
             this.formMode="EDIT";
             await this.getEmployeeById(EmployeeId);
-            // // trước khi lấy dữ liệu nhân viên theo id thì lấy dữ liệu đơn vị trước
-            // await this.$refs.employeeDetail.getDepartments();
-            
-            // //lấy dữ liệu nhân viên gửi cho dialog
-            // await axios
-            // .get("https://localhost:44372/api/v1/Employees/"+EmployeeId)
-            // .then((res)=>{
-            //     this.selectedEmp = res.data;
-            //     this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
-                
-            // })
-            // .catch((res)=>{
-            //     console.log(res);
-            // })
-            // // nhân bản đối tượng để kiểm tra việc dữ liệu có bị thay đối hay không.
-            // this.oldEmployee = {};
-            // var propsSelectedEmp = Object.getOwnPropertyNames(this.selectedEmp);
-            // for(var i = 0; i < propsSelectedEmp.length; i++){
-            //     var propName = propsSelectedEmp[i];
-            //     this.oldEmployee[propName] = this.selectedEmp[propName];    
-            // }
             this.isShowDialogDetail=true;
+        },
+        /**
+         * xuất khẩu file excel
+         * created by ndluc(16/04/2021)
+         */
+        exportFileExcel(){
+            window.open("https://localhost:44372/api/v1/Employees/Export"); 
         },
     },
     watch:{}

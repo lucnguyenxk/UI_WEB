@@ -64,7 +64,6 @@ export default {
 
   data() {
     return {
-      is_active: false,
       option_selected: null,// đối tượng đã được chọn
       isShow: false, // Ẩn hiện Options
       index_Selecting: -1, // Chỉ số (STT) của thằng đang được chọn
@@ -107,7 +106,6 @@ export default {
       if (this.index_Selecting < 0) {
         this.index_Selecting = this.options.length - 1;
       }
-
       this.isShow = true;
     },
 
@@ -295,6 +293,9 @@ $icon-toggle: url("");
       @include Size(30px, 100%);
       .icon-toggle {
         @include Icon;
+      }
+      &:hover{
+        background-color: #e0e0e0;
       }
     }
   }

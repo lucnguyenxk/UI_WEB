@@ -4,7 +4,6 @@
             <div class="menu-top">
                 <div class="img-list"></div>
                 <div class="img-logo "></div>
-                <div class=" TextMenuCus">Kế Toán</div>
             </div>
             <div class="menu-list">
                 <div class="item">

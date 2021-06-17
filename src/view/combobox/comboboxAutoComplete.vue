@@ -34,6 +34,7 @@
       >
         {{ item[label_key] }}
       </div>
+      <div class="option" v-if="data_filter.length==0">Không có kết quả phù hợp!</div>
     </div>
   </div>
 </template>
@@ -70,14 +71,13 @@ export default {
 
   data() {
     return {
-      is_active: false,
       option_selected: {},// đối tượng đã được chọn
       isShow: false, // Ẩn hiện Options
       index_Selecting: -1, // Chỉ số (STT) của thằng đang được chọn
       label_value: null, // Label Text value (Giá trị hiển thị của thằng đang được chọn)
       data_filter: [], // danh sách dữ liệu đã qua lọc
-      is_hover : false,
-      resultEmpty : false,
+      is_hover : false, // kiểm tra việc hover 
+      resultEmpty : false,// kiểm tra việc lọc dữ liệu không có kết quả hay ô nhập dữ liệu bị bỏ trống
     };
   },
 
@@ -196,7 +196,7 @@ export default {
       //debugger // eslint-disable-line no-debugger
       this.isShow = false;
       this.index_Selecting = -1;
-
+      // kiểm tra giá trị nhập vào có bị bỏ trống hay không trước
       if(this.label_value ==""){
         this.$emit("input","")
       }
@@ -209,7 +209,6 @@ export default {
       }
       else if(this.label_value!=null) {
         // trường hợp đã chọn nhưng lại viết lại thì xem giá trị viết lại có phù hợp hay không.
-        //if(this.label_value != this.option_selected[this.label_key] && this.label_value !=""){
             var optionselect = this.getOptionByName(this.label_value);
             if(optionselect != null){
               this.option_selected = optionselect;
@@ -219,12 +218,6 @@ export default {
               this.$emit("input","false");
               this.resultEmpty = true;
             }
-            
-        //}
-        // phòng trường hợp xóa đi rồi viết lại giá trị ban đầu
-        // else if(this.label_value ==this.option_selected[this.label_key]){
-        //   this.$emit("input",this.option_selected[this.value_key]);
-        // }
       }
     },
 
@@ -293,7 +286,8 @@ export default {
      */
     filterData() {
       this.ShowOptions();
-      if (this.label_value.length == 0) {
+      if (this.label_value.length == 0 || this.label_value ==null) {
+
         this.data_filter = this.options;
       } else {
         this.data_filter = this.options.filter(
@@ -318,7 +312,8 @@ export default {
    * created by ndluc (11/06/2021)
    */
   created() {
-    //this.getDeFaultValue();
+  },
+  mounted(){
   },
   watch:{
       isDialogShow(){
@@ -348,6 +343,9 @@ export default {
           else if(this.label_value == null || this.label_value !=""){
             this.resultEmpty = false;
           }
+          if(this.data_filter.length == 0){
+            this.resultEmpty = true;
+          }
       }
   }
 };
@@ -359,9 +357,9 @@ export default {
 **********************/
 
 // chiều dài của thẻ:
-$width: 107%;
+$width: 100%;
 // Chiều cao của thẻ:
-$height: 36px;
+$height: 32px;
 // Background Default:
 $background-default: #ffffff;
 // Background Hover:

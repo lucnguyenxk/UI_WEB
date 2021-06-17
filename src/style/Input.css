@@ -10,6 +10,7 @@ input{
     outline: 0;
     padding-right:8px;
     font-family: GoogleSans-Regular;
+    box-sizing: border-box;
 
 }
     input:focus{

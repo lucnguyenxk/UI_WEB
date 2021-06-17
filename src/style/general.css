@@ -56,6 +56,10 @@ div{
     font-family: 'notosans-semibold';
     src: url('../assets/font/notosans-semibold.df3e6dc4.woff2') format('opentype');
 }
+@font-face {
+    font-family: 'notosans-italic';
+    src: url('../assets/font/notosans-italic.1c1aaac9.woff2') format('opentype');
+}
 
 .bg-selected-row{
     background-color: #f0f0f0;

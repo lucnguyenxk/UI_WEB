@@ -66,6 +66,9 @@
         height: 32px;
         box-sizing: border-box;
 }
+.input-search::placeholder{
+    font-family: notosans-italic ;
+}
 
 .btn-refresh {
     background-color:  initial;
@@ -129,7 +132,7 @@ th, td{
 }
 .grid{
     margin-top: 10px;
-    height: 70vh;
+    height: 65vh;
     overflow-y: scroll;
     padding-left: 16px;
     padding-right: 10px;

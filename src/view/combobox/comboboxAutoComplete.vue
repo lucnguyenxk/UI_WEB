@@ -8,6 +8,7 @@
     v-on:keydown.tab="hideOptions"
   >
     <div class="select-label">
+      <div style="margin-bottom : 30px" @mouseover="mouseOver('department')"  @mouseout="mouseOut('department')" >
       <input
         class="label-value" :class="{'resultEmpty' : resultEmpty}"
         v-model="label_value"
@@ -15,6 +16,8 @@
         @input="filterData"
         ref="inputComplete"
       />
+      <p class="noti" :class="{'missing':!isHoverDepartmentInput}" >Tên đơn vị không được trống!</p>
+      </div>
 
       <div class="icon-item" @click="toggleOnClick" >
         <div class="icon-toggle" ></div>
@@ -78,10 +81,32 @@ export default {
       data_filter: [], // danh sách dữ liệu đã qua lọc
       is_hover : false, // kiểm tra việc hover 
       resultEmpty : false,// kiểm tra việc lọc dữ liệu không có kết quả hay ô nhập dữ liệu bị bỏ trống
+      isHoverDepartmentInput : false
     };
   },
 
   methods: {
+    /**
+     * sự kiện chuột hover vào ô nhập dữ liệu
+     * created by ndluc(18/06/2021)
+     */
+    mouseOver(data){
+      if(data =="department"){
+        this.isHoverDepartmentInput = true;
+      }
+    },
+
+    /**
+     * sự kiện hover bên ngoài ô nhập dữ liệu
+     * created by ndluc(18/06/2021)
+     */
+    mouseOut(data){
+      if(data =="department"){
+        this.isHoverDepartmentInput = false;
+      }
+    },
+
+
     /**
      * sự kiện chuột đang hover vào option được chọn
      * created by ndluc (11/06/2021)

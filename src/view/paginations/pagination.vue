@@ -11,7 +11,7 @@
                     <button class="btn-forward first" @click="preOnClick()" :class="{'hiden':this.currentPage ==1}">Trước</button> 
                     <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageOne  }" @click="pageOneOnClick()">{{this.pageOne}}</button>
                     <button class="paging threeDots" :class="{'displayThreeDotsFirst':(this.pagePreMid==2) || this.pageLast < 5}" @click="dotFrontOnclick()" >...</button>
-                    <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pagePreMid, 'display': this.pageLast <2 }" @click="pagePreMidOnClick()">{{this.pagePreMid}}</button>
+                    <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pagePreMid , 'display': this.pageLast <2 }" @click="pagePreMidOnClick()">{{this.pagePreMid}}</button>
                     <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageMid, 'display' : this.pageLast <3}" @click="pageMidOnClick()">{{this.pageMid}}</button>
                     <button class="paging pagenumber" :class="{'IsActive': this.currentPage==this.pageBehMid, 'display' :this.pageLast <4}" @click="pageBehMidOnClick()">{{this.pageBehMid}}</button>
                     <button class="paging threeDots" :class="{'displayThreeDotsFirst':(this.pageBehMid ==this.pageLast-1) || this.pageLast < 5}" @click="dotBehindOnclick()">...</button>
@@ -81,8 +81,6 @@ export default {
                 }
                 this.$emit("loadFromPag", this.currentPage, this.pageSize)
             }
-            
-            
         },
 
         /**
@@ -187,6 +185,15 @@ export default {
         isSearch(){
             if(this.isSearch){
                 this.currentPage = 1;
+            }
+        },
+        /**
+         * theo dõi sự thay đổi của tổng số trang , khi xóa hết dữ liệu trang cuối cùng.
+         * created by ndluc(18/06/2021)
+         */
+        pageLast(){
+            if(this.currentPage > this.pageLast){
+                this.currentPage=this.pageLast;
             }
         }
     }

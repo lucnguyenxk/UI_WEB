@@ -138,6 +138,7 @@ export default {
             stringInput : "",// chuỗi tìm kiếm mặc định
             selectPageSize : 20,// mặc định kích cỡ trang ban đầu là 20
             isSearch:false, // biến kiểm tra việc có đang lọc dữ liệu hay không.
+            response:{}// đối tượng nhận các thông báo từ api
         }
     },  
     methods:{
@@ -210,7 +211,7 @@ export default {
             }
             else 
             {
-                this.empCodeToDelete=code;
+                this.empCodeToDelete= "<"+code+">";
                 this.currentId = id;
                 this.isShowListFunction =true;
             }
@@ -253,8 +254,13 @@ export default {
          * ẩn thông báo muốn xóa nhân viên
          * created by ndluc(14/06/2021)
          */
-        hideNotiDelete(){
+        hideNotiDelete(data){
             this.isShowNotiDelete = false;
+            if(data=="SuccedDelete"){
+                if(this.currentPage==this.pageLast && this.employees.length==1){
+                    this.currentPage= this.currentPage-1;
+                }
+            }
             this.loadPaging();
         },
 
@@ -269,16 +275,7 @@ export default {
             return result
         },
 
-        /**
-         * định dạng lại ngày tháng để gửi cho dialog
-         * created by ndluc(14/06/2021)
-         */
-        formatDateForDetail(data){
-            var date = data + "";
-            if(date=="null") return null;
-            var result = date.substr(0,4) +"-"+ date.substr(5,2)+"-"+date.substr(8,2);
-            return result
-        },
+        
 
          /**
          * hàm load dữ liệu có phân trang
@@ -297,12 +294,15 @@ export default {
                     else{
                         this.pageLast = (this.totalRecord -this.totalRecord % this.PageSize)/this.PageSize;
                     }
-    
                 }
-                else this.totalRecord = 0;
+                else
+                {
+                    this.pageLast = 1;
+                    this.totalRecord = 0;
+                }
             })
             .catch((res)=>{
-                console.log(res);
+                this.response= res;
             })
         },
 
@@ -317,7 +317,7 @@ export default {
                 this.employees = res.data;
             })
             .catch((res)=>{
-                console.log(res);
+                this.response= res;
             })
         },
 
@@ -334,7 +334,7 @@ export default {
                 this.oldEmployee.employeeCode = res.data;
             })
             .catch((res)=>{
-                console.log(res);
+                this.response= res;
             })
         },
 
@@ -371,12 +371,10 @@ export default {
             .get("https://localhost:44372/api/v1/Employees/"+employeeId)
             .then((res)=>{
                 this.selectedEmp = res.data;
-                console.log(this.selectedEmp);
-                this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
-                console.log(this.selectedEmp.dateOfBirth)
+                //this.selectedEmp.dateOfBirth= this.formatDate(this.selectedEmp.dateOfBirth)
             })
             .catch((res)=>{
-                console.log(res);
+               this.response= res;  
             })
             // nhân bản đối tượng để kiểm tra việc dữ liệu có bị thay đối hay không.
             this.oldEmployee = {};

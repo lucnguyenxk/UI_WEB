@@ -27,27 +27,24 @@
                                     <div class="Code_Name">
                                         <div class="Code_Emp">
                                             <p>Mã nhân viên <span>*</span></p>
-                                            <input type="text" class="CodeEmp" :class="{'MissingValue':isMissingEmployeeCode}" ref ="employeeCodeFocus" v-model="employee.employeeCode" @mouseover="mouseOver('employeeCode')" @mouseout="mouseOut('employeeCode')">
-                                            <p class="noti" :class="{'missing':!isMissingEmployeeCode}" >Mã không được trống!</p>
+                                            <div @mouseover="mouseOver('employeeCode')" @mouseout="mouseOut('employeeCode')">
+                                                <input type="text" class="CodeEmp" :class="{'MissingValue':isMissingEmployeeCode}" ref ="employeeCodeFocus" v-model="employee.employeeCode" >
+                                                <p class="noti" :class="{'missing':!isMissingEmployeeCode}" >Mã không được trống!</p>
+                                            </div>
                                         </div>
                                         <div class="Name_Emp">
                                             <p>Tên nhân viên <span>*</span></p> 
-                                            <input type="text" @mouseover="mouseOver('fullName')" @mouseout="mouseOut('fullName')" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullName">
-                                            <p class="noti" :class="{'missing':!isMissingNameEmp}" >Tên không được trống!</p>
+                                            <div @mouseover="mouseOver('fullName')" @mouseout="mouseOut('fullName')">
+                                                <input type="text" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullName">
+                                                <p class="noti" :class="{'missing':!isMissingNameEmp}" >Tên không được trống!</p>
+                                            </div>
+                                            
                                         </div>
                                     </div>
                                     <div class="Group_Emp">
                                         <p>Đơn vị <span>*</span></p>
-                                        <!-- <select name="" id="Group" @mouseover="mouseOver('group')" @mouseout="mouseOut('group')" v-model="employee.departmentId" class="" :class="{ 'MissingValue':isMissingEmployeeDepartment}">
-                                            <option value="7c4f14d8-66fb-14ae-198f-6354f958f4c0">Phòng nhân sự</option>
-                                            <option value="45ac3d26-18f2-18a9-3031-644313fbb055">Phòng đào tạo</option>
-                                            <option value="3f8e6896-4c7d-15f5-a018-75d8bd200d7c">Phòng hành chính</option>
-                                            <option value="78aafe4a-67a7-2076-3bf3-eb0223d0a4f7">Phòng Marketing</option>
-                                        </select> -->
                                         <ComboboxAutoComplete 
                                             ref="comboboxAutoComplete"
-                                            @mouseover.native="mouseOver('department')" 
-                                            @mouseout.native="mouseOut('department')"
                                             :options="departments"
                                             value_key="departmentId"
                                             label_key="departmentName" 
@@ -55,7 +52,7 @@
                                             :isDialogShow="isShow"
                                             v-model="employee.departmentId"
                                         />
-                                        <p class="noti" :class="{'missing':!isMissingEmployeeDepartment}" >Tên đơn vị không được trống!</p>
+                                        
                                     </div>
                                     <div class="Position_Emp"> 
                                         <p>Chức danh</p>
@@ -66,7 +63,28 @@
                                     <div class="DOB_GEN">
                                         <div class="DOBEmp">
                                             <p>Ngày sinh</p>
-                                            <input type="date" class="DOB" v-model="employee.dateOfBirth">
+                                            <!-- <input type="date" class="DOB" v-model="employee.dateOfBirth"> -->
+                                            <DatePicker 
+                                            v-model="employee.dateOfBirth"
+                                            displayFomat="DD.MM.YYYY"
+                                            :inputAttributes="{
+                                                class :'DOB',
+                                                style : 'font-size:13px',
+                                                placeholder :'DD/MM/YYYY'
+                                            }"
+                                            :value="
+                                                employee && employee.dateOfBirth
+                                                ?formatYYYYMMDD(employee.dateOfBirth)
+                                                : null
+                                            " 
+                                            @input="
+                                                $emit('update:employee',
+                                                {
+                                                    ...employee,
+                                                    dateOfBirth: $event,
+                                                })
+                                            "
+                                            />
                                         </div>
                                         <div class="GENEmp">
                                             <p>Giới tính</p>
@@ -189,7 +207,10 @@ import axios from 'axios';
 import NotiDuplicateCode from '../notifications/notiDuplicateCode.vue';
 import NotiCloseDialog from '../notifications/notiCloseDialog.vue';
 import NotiEmptyValue from '../notifications/notiEmptyValue.vue';
-import ComboboxAutoComplete from '../combobox/comboboxAutoComplete.vue'
+import ComboboxAutoComplete from '../combobox/comboboxAutoComplete.vue';
+import DatePicker from 'vue-date-pick'
+import 'vue-date-pick/dist/vueDatePick.css'
+import dayjs from 'dayjs'
 
 export default {
     components:{
@@ -197,14 +218,15 @@ export default {
         NotiCloseDialog,
         NotiEmptyValue,
         ComboboxAutoComplete,
+        DatePicker,
     },
     created(){
     },
     props:{
-        oldEmployee:{type: Object, default : null},
-        isAddMore:{type : Boolean,default: false},
-        employee:{type: Object, default: null},
-        isShow:{type:Boolean, default : false},
+        oldEmployee:{type: Object, default : null},// đối tượng nhân viên dùng để kiểm tra sự thay đổi
+        isAddMore:{type : Boolean,default: false},// kiểm tra việc thêm và cất hay chỉ cất
+        employee:{type: Object, default: null},// đối tượng nhân viên của dialog
+        isShow:{type:Boolean, default : false},// kiểm tra việc có hiện dialog hay không
         formMode:{type:String, default: "add"}, // mode kiểm tra xem công việc là thêm sửa hay xóa.
     },  
     methods: {
@@ -256,9 +278,6 @@ export default {
             {
                 this.isMissingNameEmp = true;
             }
-            else if(data =="department"){
-                this.isMissingEmployeeDepartment = true;
-            }
         },
 
         /**
@@ -274,9 +293,18 @@ export default {
             {
                 this.isMissingNameEmp = false;
             }
-            else if(data =="department"){
-                this.isMissingEmployeeDepartment = false;
-            }
+        },
+
+        /**
+         * định dạng lại ngày tháng để gửi cho dialog
+         * created by ndluc(14/06/2021)
+         */
+        formatYYYYMMDD(data){
+            // var date = data + "";
+            // if(date=="null") return null;
+            // var result = date.substr(0,4) +"-"+ date.substr(5,2)+"-"+date.substr(8,2);
+            // return result
+            return data ? dayjs(data).format("DD-MM-YYYY") : null;
         },
 
         /**
@@ -309,6 +337,7 @@ export default {
          * created by ndluc(14/06/2021)
          */
         closeDiaOnClick(){
+            //biến kiểm tra 2 đối tượng có giống nhau hay không 
             var checkEqual = true;
             var empProperty = Object.getOwnPropertyNames(this.employee);
             // Kiểm tra xem dữ liệu có bị thay đổi hay không? 
@@ -352,27 +381,18 @@ export default {
             {
                 this.validate = false;
                 this.isShowNotiEmptyValue = true;
-                this.notiEmptyValue = "Phòng ban không hợp lệ,vui lòng kiểm tra lại."
+                this.notiEmptyValue = "Thông tin đơn vị không tồn tại trong hệ thống,vui lòng kiểm tra lại."
             }
             else if(this.employee.departmentId==""|| this.employee.departmentId==null){
                 this.validate = false;
                 this.isShowNotiEmptyValue = true;
-                this.notiEmptyValue = "Phòng ban không được để trống."
+                this.notiEmptyValue = "Đơn vị không được để trống."
             }
-           
-            
             else{
                 this.validate = true;
             }
-            if(this.isMissingEmail==false){
-                this.validEmail=""+this.employee.Email;
-                
-                if(this.validEmail.search("@") < 0 ||this.validEmail.search(".com")<0){
-                    this.validEmail=" đúng định dạng:ABC@XYZ.com";
-                    this.isMissingEmail=true;
-                }
-            }
         },
+
         /**
          * thêm mới hoặc upddate đối tượng
          * created by ndluc(13/06/2021)
@@ -380,6 +400,7 @@ export default {
         addOrUpdateEmployee(){
             if(this.validate) 
             {
+                // thêm mới
                 if(this.formMode=="add"){
                     axios
                     .post("https://localhost:44372/api/v1/Employees",this.employee)
@@ -390,13 +411,14 @@ export default {
                         else{
                             this.$emit('hideDialog');
                         }
-                        console.log(res)
+                        this.response = res;
                     })
                     .catch((error)=>{
                             this.failRes = error.response.data.userMsg;
                             this.isShowNoti = true;
                     })
                 }
+                // sửa 
                 else{
                    axios
                     .put("https://localhost:44372/api/v1/Employees/"+this.employee.employeeId,this.employee)
@@ -407,10 +429,9 @@ export default {
                         else{
                             this.$emit('hideDialog');
                         }
-                        console.log(res)
+                        this.response= res;
                     })
                     .catch((error)=>{
-                        debugger;//eslint-disable-line no-debugger
                         this.failRes = error.response.data.userMsg;
                         this.isShowNoti = true; 
                     })
@@ -435,8 +456,6 @@ export default {
                 })
         },
 
-        
-
         /**
          * thực hiện công việc khi ấn nút thêm mới và cất
          * created by ndluc(13/06/2021)
@@ -446,7 +465,6 @@ export default {
             this.isSaveAndAdd = true;
             var o = this;
             setTimeout(function () {
-                console.log("Hi Bro, SetTimeout is working fine.");
                 o.validateEmployee();
                 o.addOrUpdateEmployee();
             }, 30);
@@ -460,7 +478,6 @@ export default {
             var o = this;
             this.isSaveAndAdd = false;
             setTimeout(function () {
-                console.log("Hi Bro, SetTimeout is working fine.");
                 o.validateEmployee();
                 o.addOrUpdateEmployee();
             }, 30);
@@ -470,22 +487,19 @@ export default {
     },
     data() {
         return {
-            missing : false,
             isMissingEmployeeDepartment :false,// biến kiểm tra phòng ban có trống hay không
             isMissingNameEmp :false,// biến kiểm tra tên có bị trốn hay không
-            isMissingEmail :false,
             isMissingEmployeeCode: false,// biến kiểm tra mã nhân viên có bị trống hay không
-            validEmail:"",
-            Check :false,
             validate : false, // kiểm tra việc validate có đúng hay không
             failRes : "",// chuỗi nhận giá trị thông báo từ server cho người dùng.
             notiEmptyValue : "", // chuỗi thông báo giá trị bị trống cho người dùng.
-            isShowNoti: false,
+            isShowNoti: false,// kiểm tra việc đưa ra thông báo trùng mã nhân viên
             isShowNotiCloseDialog : false,// biến xác định đưa ra thông báo đóng dialog
             isSaveAndAdd : false, // biến kiểm tra việc chỉ lưu hay lưu và thêm
             isShowNotiEmptyValue: false,// biến xác nhận việc đưa ra thống báo giá trị bị trống.
             departments : [], // mảng chứa thông tin phòng ban.
-            setFocus: false, // biến dùng để điều khiển việc set focus vào ô mã nhân viên.l
+            setFocus: false, // biến dùng để điều khiển việc set focus vào ô mã nhân viên
+            response:{},// đối tượng lưu các thông báo từ api
         } 
     },
     mounted(){

@@ -103,11 +103,11 @@ table{
     text-align-last:left;
 }
     table tr {
-        height: 48px;
+        height: 30px;
         border-bottom : 1px solid #c7c7c7;
         cursor:pointer;
     }
-th{
+tr th{
     
     background-color:#eceef1 !important;
     font-weight:900;
@@ -117,6 +117,7 @@ th{
     z-index: 2;
     border-right: 1px solid #c7c7c7 !important;
     border-bottom: 1px solid #c7c7c7;
+    height: 30px;
 }
 th, td{
     padding-left: 5px;

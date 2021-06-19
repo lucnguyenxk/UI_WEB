@@ -43,8 +43,17 @@ export default {
     created(){
     },
     props:{
-        isShowListFunction : {type: Boolean, default: false},// xác nhận đưa ra danh sách chức năng
-        IdToDelete: {type : String, default: ""}//id của đối tượg được chọn để xóa
+        /**
+         *  xác nhận đưa ra danh sách chức năng : true or false
+         * created by ndluc(19/06/2021)
+         */
+        isShowListFunction : {type: Boolean, default: false},
+
+        /**
+         * //id của đối tượg được chọn để xóa
+         * created by ndluc(19/06/2021)
+         */
+        IdToDelete: {type : String, default: ""}
     },
     methods: {
 

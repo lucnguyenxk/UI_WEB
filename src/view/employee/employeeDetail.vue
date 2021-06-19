@@ -254,11 +254,35 @@ export default {
     created(){
     },
     props:{
-        oldEmployee:{type: Object, default : null},// đối tượng nhân viên dùng để kiểm tra sự thay đổi
-        isAddMore:{type : Boolean,default: false},// kiểm tra việc thêm và cất hay chỉ cất
-        employee:{type: Object, default: null},// đối tượng nhân viên của dialog
-        isShow:{type:Boolean, default : false},// kiểm tra việc có hiện dialog hay không
-        formMode:{type:String, default: "add"}, // mode kiểm tra xem công việc là thêm sửa hay xóa.
+        /**
+         * // đối tượng nhân viên dùng để kiểm tra sự thay đổi
+         * created by ndluc(19/06/2021)
+         */
+        oldEmployee:{type: Object, default : null},
+
+        /**
+         * // kiểm tra việc thêm và cất hay chỉ cất
+         * created by ndluc(19/06/2021)
+         */
+        isAddMore:{type : Boolean,default: false},
+
+        /**
+         * // đối tượng nhân viên của dialog chi tiết
+         * created by ndluc(19/06/2021)
+         */
+        employee:{type: Object, default: null},
+
+        /**
+         * // kiểm tra việc có hiện dialog hay không
+         * created by ndluc(19/06/2021)
+         */
+        isShow:{type:Boolean, default : false},
+
+        /**
+         * // mode kiểm tra xem công việc là thêm sửa hay xóa.
+         * created by ndluc(19/06/2021)
+         */
+        formMode:{type:String, default: "add"}, 
     },  
     methods: {
         /**
@@ -277,7 +301,7 @@ export default {
             else if(mode == "deny")
             {
                 this.isShowNotiCloseDialog = false;
-                this.$emit('hideDialog');
+                this.cancelDialog();
             }
             //người dùng hủy lệnh đóng dialog
             else {
@@ -395,8 +419,11 @@ export default {
          */
         cancelDialog(){
             this.isMissingNameEmp = false;
-            this.isMissingEmployeeDepartment=false;
-            this.$emit('hideDialog');
+            this.$refs.comboboxAutoComplete.isHoverDepartmentInput=false;
+            this.$refs.comboboxAutoComplete.resultEmpty = false;
+            this.isMissingDepartment = false;
+            this.$emit('hideDialog')
+            
         },
         /**
          * Sự kiện click vào nút đóng dialog
@@ -416,14 +443,13 @@ export default {
                 }
                 else if(this.employee[propName] != this.oldEmployee[propName]  && propName!= "__ob__" )
                 {
-                    //debugger;//eslint-disable-line no-debugger
                     this.isShowNotiCloseDialog = true;
                     checkEqual = false;
                     break;
                 }
             }
             if(checkEqual){
-                this.$emit('hideDialog')
+                this.cancelDialog();
             }  
         },
 
@@ -454,8 +480,10 @@ export default {
             else if(this.employee.departmentId==""|| this.employee.departmentId==null){
                 this.validate = false;
                 this.isShowNotiEmptyValue = true;
-                this.isMissingDepartment= true
                 this.notiEmptyValue = "Đơn vị không được để trống."
+                this.$refs.comboboxAutoComplete.isHoverDepartmentInput= true;
+                this.$refs.comboboxAutoComplete.resultEmpty= true
+
             }
             else{
                 this.validate = true;

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class=" page-title">
-                <div class="page-left "> Nhân viên </div>
+                <div class="page-left "> Nhân viên </div>   
                 <div class="page-right ">
                     <button class="btn-default" id="btn-add">
                         <div id="text-btn-add" class="text-btn-add" @click="addEmployeeOnClick()">Thêm mới nhân viên</div>
@@ -45,18 +45,18 @@
                                 <td class="employeeDepartment">{{emp.departmentName}}</td>
                                 <td class="employeeBankAccount" >{{emp.bankAccountNumber}}</td>
                                 <td class="funtion colum-fixed" :style="{'z-index':100-index} ">
-                                <div class="uiFuntion">
-                                <div class="updateEmp">
-                                    <button class = "update Employee" @click="editEmployeeOnClick(emp.employeeId)">Sửa</button>
-                                </div>
-                                <div class="listFuncEmp">
-                                    <button class="listFunc Employee" @click="listFuncOnClick(emp.employeeId,emp.employeeCode)"></button>
-                                    <ListFunction
-                                        :isShowListFunction="isShowListFunction && currentId == emp.employeeId"
-                                        @hideListFuntion="hideListFuntion"
-                                    />
-                                </div>
-                                </div>
+                                    <div class="uiFuntion">
+                                    <div class="updateEmp">
+                                        <button class = "update Employee" @click="editEmployeeOnClick(emp.employeeId)">Sửa</button>
+                                    </div>
+                                    <div class="listFuncEmp">
+                                        <button class="listFunc Employee" @click="listFuncOnClick(emp.employeeId,emp.employeeCode)"></button>
+                                        <ListFunction
+                                            :isShowListFunction="isShowListFunction && currentId == emp.employeeId"
+                                            @hideListFuntion="hideListFuntion"
+                                        />
+                                    </div>
+                                    </div>
                                 
                             </td>
                             </tr>

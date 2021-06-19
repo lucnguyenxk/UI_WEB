@@ -28,25 +28,85 @@ export default {
         Combobox,
     },
     props :{
-        isSearch:{type :Boolean, default: false}, // kiểm tra sự thay đối của khóa tìm kiếm
-        pageLast :{type:Number, default : 1}// lấy giá trị số trang cuối hay tổng số trang , không có dữ liệu thì là 1
+        /**
+         *  kiểm tra sự thay đối của khóa tìm kiếm
+         * created by ndluc(19/06/2021)
+         * 
+         */
+        isSearch:{type :Boolean, default: false}, 
+
+        /**
+         * lấy giá trị số trang cuối hay tổng số trang , không có dữ liệu thì là 1
+         * created by ndluc(19/06/2021)
+         */
+        pageLast :{type:Number, default : 1}
     },
     data() {
         return {
-            showDotFront: false, // hiện 3 dấu chấm phía trước
-            showDotBehind : true,// hiện 3 dấu chấm phía sau
-            pageOne :1,// trang đầu tiên
-            pagePreMid:2,// giá trị trang của ô thứ 2 : mặc định ban đầu nếu có là 2
-            pageMid:3,// giá trị trang của ô thứ 3 (chính giữa) : mặc định ban đầu nếu có là 3
-            pageBehMid:4, // giá trị trang của ô thứ 4 : mặc địn ban đầu nếu có là 4
-            currentPage:1,// trang hiện tại đang lấy dữ liệu
-            pageSize:20,// kích cỡ trang lựa chọn
-            PageSizedDefault:20,// kích cõ trang mặc định
+            /**
+             * hiện 3 dấu chấm phía trước
+             * created by ndluc(19/06/2021)
+             */
+            
+            showDotFront: false, 
+
+            /**
+             * hiện 3 dấu chấm phía sau
+             * created by ndluc(19/06/2021)
+             */
+            showDotBehind : true,
+
+            /**
+             * trang đầu tiên
+             * created by ndluc(19/06/2021)
+             */
+            pageOne :1,
+
+            /**
+             * // giá trị trang của ô thứ 2 : mặc định ban đầu nếu có là 2
+             * created by ndluc(19/06/2021)
+             */
+            pagePreMid:2,
+
+            /**
+             * // giá trị trang của ô thứ 3 (chính giữa) : mặc định ban đầu nếu có là 3
+             * created by ndluc(19/06/2021)
+             */
+            pageMid:3,
+
+            /**
+             * // giá trị trang của ô thứ 4 : mặc địn ban đầu nếu có là 4
+             * created by ndluc(19/06/2021)
+             */
+            pageBehMid:4, 
+
+            /**
+             * // trang hiện tại đang lấy dữ liệu
+             * created by ndluc(19/06/2021)
+             */
+            currentPage:1,
+
+            /**
+             * // kích cỡ trang lựa chọn
+             * created by ndluc(19/06/2021)
+             */
+            pageSize:20,
+
+            /**
+             * // kích cõ trang mặc định
+             * created by ndluc(19/06/2021)
+             */
+            PageSizedDefault:20,
+
+            /**
+             *  mảng các giá trị kích cỡ trang được chọn
+             * created by ndluc(19/06/2021)
+             */
             arrayPageSize:[
                 { pageSizeTitle: "20 bản ghi trên 1 trang" ,pageSize : 20},
                 { pageSizeTitle: "50 bản ghi trên 1 trang" ,pageSize : 50},
                 {pageSizeTitle: "100 bản ghi trên 1 trang" ,pageSize : 100},
-            ]// mảng các giá trị kích cỡ trang được chọn lựa.
+            ]
         }
     },
     methods :{

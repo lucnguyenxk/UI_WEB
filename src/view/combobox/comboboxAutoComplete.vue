@@ -10,11 +10,12 @@
     <div class="select-label">
       <div style="margin-bottom : 30px" @mouseover="mouseOver('department')"  @mouseout="mouseOut('department')" >
       <input
-        class="label-value" :class="{'resultEmpty' : resultEmpty}"
+        class="label-value" :class="{'resultEmpty' : resultEmpty, }"
         v-model="label_value"
         @click="isShow = true"
         @input="filterData"
         ref="inputComplete"
+        @focus="focusInput"
       />
       <p class="noti" :class="{'missing':!isHoverDepartmentInput}" >Tên đơn vị không được trống!</p>
       </div>
@@ -78,18 +79,68 @@ export default {
 
   data() {
     return {
-      option_selected: {},// đối tượng đã được chọn
-      isShow: false, // Ẩn hiện Options
-      index_Selecting: -1, // Chỉ số (STT) của thằng đang được chọn
-      label_value: null, // Label Text value (Giá trị hiển thị của thằng đang được chọn)
-      data_filter: [], // danh sách dữ liệu đã qua lọc
-      is_hover : false, // kiểm tra việc hover 
-      resultEmpty : false,// kiểm tra việc lọc dữ liệu không có kết quả hay ô nhập dữ liệu bị bỏ trống
+
+      /**
+       *  đối tượng đã được chọn
+       * createdb by ndluc(19/06/2021)
+       */
+      option_selected: {},
+
+      /**
+       * Ẩn hiện Options
+       * createdb by ndluc(19/06/2021)
+       */
+      isShow: false, 
+
+      /**
+       * Chỉ số (STT) của thằng đang được chọn
+       * createdb by ndluc(19/06/2021)
+       */
+      index_Selecting: -1, 
+
+      /**
+       * Label Text value (Giá trị hiển thị của thằng đang được chọn)
+       * createdb by ndluc(19/06/2021)
+       */
+      label_value: null, 
+
+      /**
+       * danh sách dữ liệu đã qua lọc
+       * createdb by ndluc(19/06/2021)
+       */
+      data_filter: [], 
+
+      /**
+       * kiểm tra việc hover 
+       * createdb by ndluc(19/06/2021)
+       */
+      is_hover : false, 
+
+      /**
+       *  kiểm tra việc lọc dữ liệu không có kết quả hay ô nhập dữ liệu bị bỏ trống
+       * createdb by ndluc(19/06/2021)
+       */
+      resultEmpty : false,
+
+      /**
+       *  kiểm tra việc hover qua ô nhập dữ liệu
+       * createdb by ndluc(19/06/2021)
+       */
       isHoverDepartmentInput : false
     };
   },
 
   methods: {
+
+    /**
+     * focus vào input tìm kiếm đơn vị thì ẩn thông báo bắt buộcc nhập
+     * created by ndluc(19/06/2021)
+     */
+    focusInput(){
+      this.isHoverDepartmentInput = false;
+      this.resultEmpty = false;
+    },
+
     /**
      * sự kiện chuột hover vào ô nhập dữ liệu
      * created by ndluc(18/06/2021)
@@ -97,6 +148,7 @@ export default {
     mouseOver(data){
       if(data =="department" &&( this.label_value==""|| this.label_value ==null)){
         this.isHoverDepartmentInput = true;
+        this.resultEmpty = true;
       }
     },
 
@@ -107,6 +159,7 @@ export default {
     mouseOut(data){
       if(data =="department"){
         this.isHoverDepartmentInput = false;
+        this.resultEmpty = false;
       }
     },
 
@@ -118,12 +171,12 @@ export default {
     isHover(){
         this.is_hover = true;
     },
-
+    
+    /**
+     * sự kiện khi click ra ngoài combobox
+     * created by ndluc (11/06/2021)
+     */
     onClickOutSide() {
-      // debugger // eslint-disable-line no-debugger
-    //   if(this.label_value.length ==0){
-    //     this.resultEmpty = false
-    //   }
       this.hideOptions();
     },
     //#region 1. Xử lý các sự kiện
@@ -157,6 +210,7 @@ export default {
         this.$refs.inputComplete.focus();
       }
     },
+
     /**
      * Sự kiện Press vào Enter
      * created by ndluc (11/06/2021)
@@ -167,6 +221,8 @@ export default {
       }
       this.hideOptions();
     },
+
+
     /**
      * Sự kiện Press mũi tên đi lên chọn Option
      * Created by ndluc (11/06/2021)
@@ -298,7 +354,6 @@ export default {
      * created by ndluc(2021)
      */
     checkDepartmentValue(){
-        //debugger // eslint-disable-line no-debugger
         var isDepartmentValid = false;
         this.options.forEach(option => {
             if(option[this.label_key]!=null && this.label_value!=null && this.label_value!="" && option[this.label_key].toLowerCase()== this.label_value.toLowerCase()){
@@ -325,7 +380,6 @@ export default {
               .toLowerCase()
               .indexOf(this.label_value.toLowerCase()) != -1
         );
-        //debugger;// eslint-disable-line no-debugger
         if(this.data_filter.length == 0){
           this.resultEmpty = true;
         }
@@ -382,7 +436,7 @@ export default {
           if(this.data_filter.length == 0){
             this.resultEmpty = true;
           }
-      }
+      },
   }
 };
 </script>
@@ -470,9 +524,6 @@ $icon-toggle: url("");
         outline: none;
         border: 1px solid #2ca01c;
       }
-      &:hover{
-        border: 1px solid red !important;
-      }
     }
     .icon-item {
       position: absolute;
@@ -514,6 +565,7 @@ $icon-toggle: url("");
       @include Size(100%, $height);
       @include Flex-Center;
       color: $color-default;
+      cursor: pointer;
       
       &:hover {
         background: $background-hover;

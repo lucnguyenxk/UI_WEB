@@ -23,10 +23,18 @@
 <script>
 export default {
     props :{
+        /**
+         * xác nhận đưa ra thống báo đóng dialog chi tiết : true or false,
+         * created by ndluc(19/06/2021)
+         */
         isShowNotiCloseDialog : {type : Boolean, default : false}
     },
     data(){
         return{
+            /**
+             * trạng thái được chọn
+             * created by ndluc(19/06/2021)
+             */
             Mode :"",
         }
         

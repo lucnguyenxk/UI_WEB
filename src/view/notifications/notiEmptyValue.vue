@@ -18,7 +18,16 @@
 <script>
 export default {
     props:{
+        /**
+         * tin nhắn dữ liệu trống cho người dùng
+         * created by ndluc(19/06/2021)
+         */
         notiEmptyValue : {type : String, default :""},
+
+        /**
+         * xác nhận đưa ra thông báo dữ liệu trống:  true, false
+         * created by ndluc(19/06/2021)
+         */
         isShowNotiEmptyValue:{type : Boolean, default: false}
     },
     methods: {

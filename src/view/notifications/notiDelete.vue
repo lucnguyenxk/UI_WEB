@@ -23,8 +23,23 @@
 import axios from 'axios'
 export default {
     props : {
+
+        /**
+         * xác nhận đưa ra thông báo xóa nhân viên
+         * created by ndluc(19/06/2021)
+         */
         isShowNotiDelete: {type : Boolean , default :false},
+
+        /**
+         * id đối tượng được chọn để xóa
+         * created by ndluc(19/06/2021)
+         */
         idToDelete : {type : String, default: ""},
+
+        /**
+         * mã của đối tượng được chọn để xóa
+         * created by ndluc(19/06/2021)
+         */
         empCodeToDelete:{type : String, default : ""}
     },
     data(){

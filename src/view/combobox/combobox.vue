@@ -64,10 +64,29 @@ export default {
 
   data() {
     return {
-      option_selected: null,// đối tượng đã được chọn
-      isShow: false, // Ẩn hiện Options
-      index_Selecting: -1, // Chỉ số (STT) của thằng đang được chọn
-      label_value: null, // Label Text value (Giá trị hiển thị của thằng đang được chọn)
+      /**
+       * đối tượng đã được chọn
+       * created by ndluc(19/06/2021)
+       */
+      option_selected: null,
+
+      /**
+       * Ẩn hiện Options
+       * created by ndluc(19/06/2021)
+       */
+      isShow: false, // 
+
+      /**
+       * Chỉ số (STT) của thằng đang được chọn
+       * created by ndluc(19/06/2021)
+       */
+      index_Selecting: -1, // 
+
+      /**
+       * Label Text value (Giá trị hiển thị của thằng đang được chọn)
+       * created by ndluc(19/06/2021)
+       */
+      label_value: null, 
     };
   },
 

@@ -32,14 +32,28 @@ export default {
         
     },
     methods: {
+        /**
+         * hàm hủy lưu đối tượng
+         * created by ndluc(18/06/2021)
+         */
       denySave(){
           this.Mode ="deny";
           this.$emit('HideNotiCloseDialog', this.Mode);
       },  
+
+      /**
+         * hàm lựa chọn lưu tượng
+         * created by ndluc(18/06/2021)
+         */
       acceptSave(){
           this.Mode ="accept";
           this.$emit('HideNotiCloseDialog', this.Mode);
       },
+
+      /**
+         * hàm hủy đóng dialog chi tiết đối tượng
+         * created by ndluc(18/06/2021)
+         */
       cancelClose(){
           this.Mode = "cancel"
           this.$emit('HideNotiCloseDialog', this.Mode);

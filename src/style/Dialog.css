@@ -169,11 +169,11 @@ label{
 .DateRange{
     margin-left: 15px;
 }
-.dateofRange{
+/* .dateofRange{
     width: 93%;
     position: relative;
     right: 6px;
-}
+} */
 .RadioCheck{
     width: 18px !important;
     height: 18px !important;
@@ -238,4 +238,76 @@ input[type = Radio]{
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+.focusToEmployeeCode{
+    width: 0 !important;
+    height: 0 !important;
+    outline: none;
+    border: none;
+}
+
+.dateofRange{
+    width: 176px;
+}
+.dateOfBirth{
+    width: 170px;
+}
+
+/**
+    css của ô nhập ngày tháng.
+    created by ndluc(18/06/2021)
+*/
+.vdpComponent.vdpWithInput>input{
+    width: 100%;
+}
+.vdpPeriodControl>button {
+    color: #000000;
+    margin-bottom: 20px;
+}
+.vdpClearInput{
+    display: none;
+}
+.vdpArrowNext{
+    top : 10px;
+}
+.vdpArrowPrev{
+    top: 10px;
+}
+.vdpTable{
+    border-collapse: separate;
+    height: 150px;
+}
+.vdpHeadCell{
+    border:none ;
+    border-right: none !important;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5 !important;
+    padding: 0;
+    padding-left: 10px;
+}
+.vdpRow{
+    height: 20px !important;
+    box-sizing: border-box;
+}
+.vdpCell.selectable{
+    border-right: none;
+}
+.vdpCellContent{
+    margin-left: 5px;
+    margin-right: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.date-picker{
+    display: flex;
+}
+.icon-calendar{
+    background:url("../assets/img/Sprites.64af8f61.svg") no-repeat -128px -312px;
+    width: 27px;
+    height: 16px;
+    position: relative;
+    right: 24px;
+    top: 8px;
 }

@@ -33,9 +33,19 @@ export default {
         }
     },
     methods: {
+
+        /**
+         * hàm thông báo hủy việc xóa đối tượng
+         * created by ndluc(18/06/2021)
+         */
         cacelDelete(){
             this.$emit('hideNotiDelete')
         },
+
+        /**
+         * hàm chấp nhận đồng thời xóa đối tượng
+         * created by ndluc(18/06/2021)
+         */
         acceptDelete(){
             axios
             .delete("https://localhost:44372/api/v1/Employees/"+this.idToDelete)

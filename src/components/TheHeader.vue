@@ -4,7 +4,7 @@
             <div class="name-res">
                 <div class="img_list"></div>
                 <select id="select-res">
-                    <option value="0">CÔNG TY CỔ PHẦN MISA</option>
+                    <option value="0">CÔNG TY TNHH SẢN XUẤT - THƯƠNG MẠI - DỊCH VỤ QUI PHÚC</option>
                     <option value="0">Nhà hàng Biển Tây</option>
                     <option value="1">Nhà hàng Biển Nam</option>
                     <option value="2">Nhà hàng Biển Bắc</option>

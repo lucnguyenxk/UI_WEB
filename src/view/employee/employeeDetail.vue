@@ -28,14 +28,14 @@
                                         <div class="Code_Emp">
                                             <p>Mã nhân viên <span>*</span></p>
                                             <div @mouseover="mouseOver('employeeCode')" @mouseout="mouseOut('employeeCode')">
-                                                <input type="text" class="CodeEmp" :class="{'MissingValue':isMissingEmployeeCode}" ref ="employeeCodeFocus" v-model="employee.employeeCode" >
+                                                <input type="text" class="CodeEmp" :class="{'MissingValue':isMissingEmployeeCode}" ref ="employeeCodeFocus" v-model="employee.employeeCode" @focus="focusIn('employeeCode')" >
                                                 <p class="noti" :class="{'missing':!isMissingEmployeeCode}" >Mã không được trống!</p>
                                             </div>
                                         </div>
                                         <div class="Name_Emp">
                                             <p>Tên nhân viên <span>*</span></p> 
                                             <div @mouseover="mouseOver('fullName')" @mouseout="mouseOut('fullName')">
-                                                <input type="text" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullName">
+                                                <input type="text" class="NameEmp" :class="{'MissingValue':isMissingNameEmp}" v-model="employee.fullName" @focus="focusIn('employeeFullName')">
                                                 <p class="noti" :class="{'missing':!isMissingNameEmp}" >Tên không được trống!</p>
                                             </div>
                                             
@@ -51,6 +51,7 @@
                                             :defaultValue="employee.departmentId"
                                             :isDialogShow="isShow"
                                             v-model="employee.departmentId"
+                                            :isMissingDepartment="isMissingDepartment"
                                         />
                                         
                                     </div>
@@ -64,27 +65,32 @@
                                         <div class="DOBEmp">
                                             <p>Ngày sinh</p>
                                             <!-- <input type="date" class="DOB" v-model="employee.dateOfBirth"> -->
-                                            <DatePicker 
-                                            v-model="employee.dateOfBirth"
-                                            displayFomat="DD.MM.YYYY"
-                                            :inputAttributes="{
-                                                class :'DOB',
-                                                style : 'font-size:13px',
-                                                placeholder :'DD/MM/YYYY'
-                                            }"
-                                            :value="
+                                            <div class="date-picker dateOfBirth">
+                                            <DatePicker
+                                                ref="dateOfBirth"
+                                                displayFormat="DD/MM/YYYY"
+                                                :inputAttributes="{
+                                                class: 'input',
+                                                style: 'font-size: 13px',
+                                                placeholder: 'DD/MM/YYYY',
+                                                }"
+                                                :weekdays="localeDatePicker.weekdays"
+                                                :months="localeDatePicker.months"
+                                                :value="
                                                 employee && employee.dateOfBirth
-                                                ?formatYYYYMMDD(employee.dateOfBirth)
-                                                : null
-                                            " 
-                                            @input="
-                                                $emit('update:employee',
-                                                {
+                                                    ? formatYYYMMDD(employee.dateOfBirth)
+                                                    : null
+                                                "
+                                                @input="
+                                                $emit('update:employee', {
                                                     ...employee,
                                                     dateOfBirth: $event,
                                                 })
-                                            "
+                                                "
                                             />
+                                            <div class="icon-calendar"></div>
+                                            </div>
+                                            
                                         </div>
                                         <div class="GENEmp">
                                             <p>Giới tính</p>
@@ -108,12 +114,36 @@
                                         </div>
                                         <div class="DateRange">
                                             <p>Ngày cấp</p>
-                                            <input type="date" class="dateofRange">
+                                            <!-- <input type="date" class="dateofRange"> -->
+                                            <div class="date-picker dateofRange ">
+                                            <DatePicker
+                                                displayFormat="DD/MM/YYYY"
+                                                :inputAttributes="{
+                                                class: 'dateofRange',
+                                                style: 'font-size: 13px',
+                                                placeholder: 'DD/MM/YYYY',
+                                                }"
+                                                :weekdays="localeDatePicker.weekdays"
+                                                :months="localeDatePicker.months"
+                                                :value="
+                                                employee && employee.dateRange
+                                                    ? formatYYYMMDD(employee.dateRange)
+                                                    : null
+                                                "
+                                                @input="
+                                                $emit('update:employee', {
+                                                    ...employee,
+                                                    dateRange: $event,
+                                                })
+                                                "
+                                            />
+                                            <div class="icon-calendar"></div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="Place_range">
                                         <p>Nơi cấp</p>
-                                        <input type="text" class="placeRange">
+                                        <input type="text" class="placeRange" v-model="employee.issuedBy">
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +159,7 @@
                                     </div>
                                     <div class="PhoneNumberfixed need">
                                         <p>Số điện thoại cố định</p>
-                                        <input type="text" class="PhoneNumberfixedEmp">
+                                        <input type="text" class="PhoneNumberfixedEmp" v-model="employee.landlinePhone">
                                     </div>
                                     <div class="Email need">
                                         <p>Email</p>
@@ -147,7 +177,8 @@
                                     </div>
                                     <div class="BankBranch need">
                                         <p>Chi nhánh</p>
-                                        <input type="text" class="BankBranchEmp">
+                                        <input type="text" class="BankBranchEmp" v-model="employee.branchBank">
+                                        <input type ="text" class="focusToEmployeeCode" @focus="focusToEmployeeCode">
                                     </div>
                                 </div>
                             </div>
@@ -208,9 +239,9 @@ import NotiDuplicateCode from '../notifications/notiDuplicateCode.vue';
 import NotiCloseDialog from '../notifications/notiCloseDialog.vue';
 import NotiEmptyValue from '../notifications/notiEmptyValue.vue';
 import ComboboxAutoComplete from '../combobox/comboboxAutoComplete.vue';
-import DatePicker from 'vue-date-pick'
-import 'vue-date-pick/dist/vueDatePick.css'
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
+import DatePicker from "vue-date-pick";
+import "vue-date-pick/dist/vueDatePick.css"
 
 export default {
     components:{
@@ -263,6 +294,27 @@ export default {
             this.employee.gender = data;
         },
 
+        /**
+         * focus vào những ô bắt buộc nhập liệu thì sẽ ẩn thống báo bắt nhập
+         * created by ndluc(19/06/2021)
+         */
+        focusIn(data){
+            if(data=="employeeCode")
+            {
+                this.isMissingEmployeeCode=false;
+            }
+            else if(data =="employeeFullName"){
+                this.isMissingNameEmp = false;
+            }
+        },
+
+        /**
+         * focus ngược lại ô mã nhân viên khi focus đến ô cuối cùng.
+         * created by ndluc(19/06/2021)
+         */
+        focusToEmployeeCode(){
+            this.$refs.employeeCodeFocus.focus();
+        },
         
         /**
          * sự kiện chuột hover qua các ô không được để trống giá trị
@@ -272,11 +324,22 @@ export default {
             //debugger; //eslint-disable-line no-debugger
             if(data=="employeeCode")
             {
-                this.isMissingEmployeeCode = true;
+                if(this.employee.employeeCode == "" || this.employee.employeeCode == null)
+                {
+                    this.isMissingEmployeeCode = true;
+                }
+                else{
+                    this.isMissingEmployeeCode = false;
+                }
+                
             }
             else if( data =="fullName")
             {
-                this.isMissingNameEmp = true;
+                if(this.employee.fullName==""|| this.employee.fullName == null)
+                {
+                    this.isMissingNameEmp = true;
+                }
+                
             }
         },
 
@@ -299,12 +362,15 @@ export default {
          * định dạng lại ngày tháng để gửi cho dialog
          * created by ndluc(14/06/2021)
          */
-        formatYYYYMMDD(data){
-            // var date = data + "";
-            // if(date=="null") return null;
-            // var result = date.substr(0,4) +"-"+ date.substr(5,2)+"-"+date.substr(8,2);
-            // return result
-            return data ? dayjs(data).format("DD-MM-YYYY") : null;
+        // formatYYYMMDD(data){
+        //     // var date = data + "";
+        //     // if(date=="null") return null;
+        //     // var result = date.substr(0,4) +"-"+ date.substr(5,2)+"-"+date.substr(8,2);
+        //     // return result
+        //     return data ? dayjs(data).format("YYYY-MM-DD") : null;
+        // },
+        formatYYYMMDD(dateStr) {
+        return dateStr ? dayjs(dateStr).format("YYYY-MM-DD") : null;
         },
 
         /**
@@ -370,11 +436,13 @@ export default {
             if(this.employee.employeeCode==""){
                 this.validate = false;
                 this.isShowNotiEmptyValue = true;
+                this.isMissingEmployeeCode= true;
                 this.notiEmptyValue = "Mã nhân viên không được để trống."
             }
             else if(this.employee.fullName==""||this.employee.fullName==null){
                 this.validate = false;
                 this.isShowNotiEmptyValue =true;
+                this.isMissingNameEmp = true;
                 this.notiEmptyValue = "Tên nhân viên không được để trống."
             }
             else if(this.employee.departmentId=="false")
@@ -386,10 +454,17 @@ export default {
             else if(this.employee.departmentId==""|| this.employee.departmentId==null){
                 this.validate = false;
                 this.isShowNotiEmptyValue = true;
+                this.isMissingDepartment= true
                 this.notiEmptyValue = "Đơn vị không được để trống."
             }
             else{
                 this.validate = true;
+            }
+            if(this.employee.dateOfBirth ==""){
+                this.employee.dateOfBirth = null;
+            }
+            if(this.employee.dateRange ==""){
+                this.employee.dateRange==null;
             }
         },
 
@@ -460,11 +535,12 @@ export default {
          * thực hiện công việc khi ấn nút thêm mới và cất
          * created by ndluc(13/06/2021)
          */
-        saveAndAddEmployeeOnClick(){
+        async saveAndAddEmployeeOnClick(){
             this.setFocus = !this.setFocus;
             this.isSaveAndAdd = true;
+            await this.getDepartments();
             var o = this;
-            setTimeout(function () {
+            await setTimeout(function () {
                 o.validateEmployee();
                 o.addOrUpdateEmployee();
             }, 30);
@@ -487,19 +563,107 @@ export default {
     },
     data() {
         return {
-            isMissingEmployeeDepartment :false,// biến kiểm tra phòng ban có trống hay không
-            isMissingNameEmp :false,// biến kiểm tra tên có bị trốn hay không
-            isMissingEmployeeCode: false,// biến kiểm tra mã nhân viên có bị trống hay không
-            validate : false, // kiểm tra việc validate có đúng hay không
-            failRes : "",// chuỗi nhận giá trị thông báo từ server cho người dùng.
-            notiEmptyValue : "", // chuỗi thông báo giá trị bị trống cho người dùng.
-            isShowNoti: false,// kiểm tra việc đưa ra thông báo trùng mã nhân viên
-            isShowNotiCloseDialog : false,// biến xác định đưa ra thông báo đóng dialog
-            isSaveAndAdd : false, // biến kiểm tra việc chỉ lưu hay lưu và thêm
-            isShowNotiEmptyValue: false,// biến xác nhận việc đưa ra thống báo giá trị bị trống.
-            departments : [], // mảng chứa thông tin phòng ban.
-            setFocus: false, // biến dùng để điều khiển việc set focus vào ô mã nhân viên
-            response:{},// đối tượng lưu các thông báo từ api
+
+            /**
+             * biến kiểm tra phòng ban có trống hay không
+             * created by ndluc(18/06/2021)
+             */
+            isMissingDepartment :false,
+
+            /**
+             * biến kiểm tra tên có bị trốn hay không
+             * created by ndluc(18/06/2021)
+             */
+            isMissingNameEmp :false,
+
+            /**
+             * biến kiểm tra mã nhân viên có bị trống hay không
+             * created by ndluc(18/06/2021)
+             */
+            isMissingEmployeeCode: false,
+
+            /**
+             * kiểm tra việc validate có đúng hay không
+             * created by ndluc(18/06/2021)
+             */
+            validate : false,  
+
+            /**
+             * chuỗi nhận giá trị thông báo từ server cho người dùng.
+             * created by ndluc(18/06/2021)
+             */
+            failRes : "",
+
+            /**
+             * chuỗi thông báo giá trị bị trống cho người dùng.
+             * created by ndluc(18/06/2021)
+             */
+            notiEmptyValue : "", 
+
+            /**
+             * kiểm tra việc đưa ra thông báo trùng mã nhân viên
+             * created by ndluc(18/06/2021)
+             */
+            isShowNoti: false,
+
+            /**
+             * biến xác định đưa ra thông báo đóng dialog
+             * created by ndluc(18/06/2021)
+             */
+            isShowNotiCloseDialog : false,
+
+            /**
+             * biến kiểm tra việc chỉ lưu hay lưu và thêm
+             * created by ndluc(18/06/2021)
+             */
+            isSaveAndAdd : false, 
+
+            /**
+             * biến xác nhận việc đưa ra thống báo giá trị bị trống.
+             * created by ndluc(18/06/2021)
+             */
+            isShowNotiEmptyValue: false,
+
+            /**
+             * mảng chứa thông tin phòng ban.
+             * created by ndluc(18/06/2021)
+             */
+            departments : [], 
+
+            /**
+             * biến dùng để điều khiển việc set focus vào ô mã nhân viên
+             * created by ndluc(18/06/2021)
+             */
+            setFocus: false, 
+
+            /**
+             * đối tượng lưu các thông báo từ api
+             * created by ndluc(18/06/2021)
+             */
+            response:{},// 
+
+            /**
+             * định dạng ngày tháng 
+             * created by ndluc(18/06/2021)
+             */
+            localeDatePicker: {
+            weekdays: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+            months: [
+            "Tháng 1",
+            "Tháng 2",
+            "Tháng 3",
+            "Tháng 4",
+            "Tháng 5",
+            "Tháng 6",
+            "Tháng 7",
+            "Tháng 8",
+            "Tháng 9",
+            "Tháng 10",
+            "Tháng 11",
+            "Tháng 12",
+            ],
+      },
+
         } 
     },
     mounted(){
@@ -524,7 +688,7 @@ export default {
          */
         setFocus(){
             this.$refs.employeeCodeFocus.focus();
-        }
+        },
     }
 }
 </script>

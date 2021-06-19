@@ -43,13 +43,23 @@ export default {
     created(){
     },
     props:{
-        isShowListFunction : {type: Boolean, default: false},
-        IdToDelete: {type : String, default: ""}
+        isShowListFunction : {type: Boolean, default: false},// xác nhận đưa ra danh sách chức năng
+        IdToDelete: {type : String, default: ""}//id của đối tượg được chọn để xóa
     },
     methods: {
+
+        /**
+         * hàm lựa chọn xóa đối tượng
+         * created by ndluc(18/06/2021)
+         */
         selectDelete(){
             this.$emit('hideListFuntion',"delete");
         },
+
+        /**
+         * hàm lựa chọn nhân bản đối tượng
+         * created by ndluc(18/06/2021)
+         */
         selectReplication(){
             this.$emit('hideListFuntion',"replication")
         }

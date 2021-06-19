@@ -22,6 +22,11 @@ export default {
         isShowNotiEmptyValue:{type : Boolean, default: false}
     },
     methods: {
+
+        /**
+         * hàm tắt thông báo giá trị rỗng
+         * created by ndluc(18/06/2021)
+         */
         acceptNoti(){
             this.$emit('hideNotiEmptyValue');
         }  

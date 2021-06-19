@@ -79,7 +79,7 @@
                 :formMode ="formMode"
                 :isShow="isShowDialogDetail"
                 :oldEmployee="oldEmployee"
-                :employee="selectedEmp"
+                :employee.sync="selectedEmp"
                 @hideDialog="hideDialog"
                 @addMoreEmployee="addMoreEmployee"
                 :isAddMore ="this.isAddMore"
@@ -90,7 +90,6 @@
             :idToDelete ="this.currentId"
             :empCodeToDelete="this.empCodeToDelete"
             />
-
     </div>
 </template>
 <script>
@@ -105,9 +104,13 @@ export default {
         EmployeeDetail,
         ListFunction, 
         NotiDelete,
-        Pagination
+        Pagination,
     },
     created(){
+        /**
+         * theo dõi sự kiện ấn ra ngoài ô chức năng
+         * created by ndluc(17/06/2021)
+         */
         this.clickOutSize(); 
 
         /**
@@ -120,25 +123,130 @@ export default {
     props:[],
     data() {
         return {
-            isShowDialogDetail : false,// kiểm tra việc đưa ra dialo cho người dùng.
-            employees : [],// danh sách nhân viên lấy được từ api
-            formMode : "add",// trạng thái là thêm, sửa ,..
-            selectedEmp:{},// đối tượng nhân viên được lựa chọn để thực hiện các thao tác thêm, sửa, ..
-            oldEmployee: {},// đối tượng nhân viên được lưu lại để so sánh sự thay đổi
-            isShowListFunction : false,// biến kiểm tra việc đưa ra danh sách chức năng
-            currentId : "",// biến giá trị của id nhân viên đang được lựa chọn
-            isShowNotiDelete : false,// biến kiểm tra việc đưa ra thông báo xóa nhân viên
-            empCodeToDelete: "",// biến lấy giá trị mã nhân viên để thực hiện xóa
-            isAddMore : false,// biến kiểm tra việc cất và thê,
-            pageLast: 1,// biến giá trị số trang cuối cùng hay tổng số trang
-            currentPage:1, // biến thể hiện số trang hiện tại
-            PageSize:20,// biến thể hiện giá trị kích cỡ trang khi thao tác
-            SearchString: "",// từ khóa dùng để gửi lên api tìm kiếm
-            totalRecord :0,// tổng số bản ghi khi tìm kiếm hoặc load trang
-            stringInput : "",// chuỗi tìm kiếm mặc định
-            selectPageSize : 20,// mặc định kích cỡ trang ban đầu là 20
-            isSearch:false, // biến kiểm tra việc có đang lọc dữ liệu hay không.
-            response:{}// đối tượng nhận các thông báo từ api
+            /**
+             * kiểm tra việc đưa ra dialo chi tiết nhân viên cho người dùng,
+             * created by ndluc(18/06/2021)
+             */
+            isShowDialogDetail : false,
+
+            /**
+             * danh sách nhân viên lấy được từ api,
+             * created by ndluc(18/06/2021)
+             */
+            employees : [],
+
+
+            /**
+             * trạng thái là thêm, sửa ,..
+             * created by ndluc(18/06/2021)
+             */
+            formMode : "add",
+
+            /**
+             * đối tượng nhân viên được lựa chọn để thực hiện các thao tác thêm, sửa, ..
+             * created by ndluc(18/06/2021)
+             */
+            selectedEmp:{},
+
+            /**
+             * đối tượng nhân viên được lưu lại để so sánh sự thay đổi,
+             * created by ndluc(18/06/2021)
+             */
+            oldEmployee: {},
+
+            /**
+             * biến kiểm tra việc đưa ra danh sách chức năng,
+             * created by ndluc(18/06/2021)
+             */
+            isShowListFunction : false,
+
+
+            /**
+             * biến giá trị của id nhân viên đang được lựa chọn,
+             * created by ndluc(18/06/2021)
+             */
+            currentId : "",
+
+
+            /**
+             * biến kiểm tra việc đưa ra thông báo xóa nhân viên,
+             * created by ndluc(18/06/2021)
+             */
+            isShowNotiDelete : false,
+
+
+            /**
+             * biến lấy giá trị mã nhân viên để thực hiện xóa,
+             * created by ndluc(18/06/2021)
+             */
+            empCodeToDelete: "",
+
+
+            /**
+             * biến kiểm tra việc cất và thêm,
+             * created by ndluc(18/06/2021)
+             */
+            isAddMore : false,
+
+
+            /**
+             * biến giá trị số trang cuối cùng hay tổng số trang, mặc định ban đầu là 1,
+             * created by ndluc(18/06/2021)
+             */
+            pageLast: 1,
+
+
+            /**
+             * biến thể hiện số trang hiện tại,
+             * created by ndluc(18/06/2021)
+             */
+            currentPage:1, 
+
+
+            /**
+             * biến thể hiện giá trị kích cỡ trang khi thao tác,
+             * created by ndluc(18/06/2021)
+             */
+            PageSize:20,
+
+
+            /**
+             * từ khóa dùng để gửi lên api tìm kiếm,
+             * created by ndluc(18/06/2021)
+             */
+            SearchString: "",
+
+
+            /**
+             * tổng số bản ghi khi tìm kiếm hoặc load trang,
+             * created by ndluc(18/06/2021)
+             */
+            totalRecord :0,
+
+
+            /**
+             * chuỗi tìm kiếm, mặc định "",
+             * created by ndluc(18/06/2021)
+             */
+            stringInput : "",
+
+
+            /**
+             * mặc định kích cỡ trang ban đầu là 20,
+             * created by ndluc(18/06/2021)
+             */
+            selectPageSize : 20,
+            /**
+             * biến kiểm tra việc có đang lọc dữ liệu hay không.
+             * created by ndluc(18/06/2021)
+             */
+            isSearch:false, 
+
+            /**
+             * đối tượng nhận các thông báo từ api,
+             * created by ndluc(18/06/2021)
+             */
+            response:{}
         }
     },  
     methods:{
@@ -239,10 +347,12 @@ export default {
             // nhân bản nhân viên.
             else if(data =="replication") {
                 //lấy code mới cho nhân viên nhân bản
-                await this.getNewCode();
+                await this.getNewCode();    
                 var newEmployeeCode = this.selectedEmp.employeeCode;
+                await this.$refs.employeeDetail.getDepartments()
                 // lấy thông tin của nhân viên được nhân bản
                 await this.getEmployeeById(this.currentId);
+                
                 this.selectedEmp.employeeCode = newEmployeeCode;
                 this.oldEmployee.employeeCode = newEmployeeCode;
                 this.isShowDialogDetail = true;
@@ -271,8 +381,19 @@ export default {
         formatDate(data){
             var date = data + "";
             if(date=="null") return "";
-            var result = date.substr(5,2)+"/"+date.substr(8,2) +"/"+date.substr(0,4);
+            var result = date.substr(8,2) +"/"+date.substr(5,2)+"/"+date.substr(0,4);
             return result
+        },
+
+        /**
+         * Định dạng ngày tháng cho dialog chi tiết nhân viên ,dùng để so sánh sự thay đổi về ngày tháng:
+         * created by ndluc(14/06/2021)
+         */
+        formatDateForDetail(data){
+            var date = data + "";
+            if(date=="null") return "";
+            var result = date.substr(0,4)+"-"+date.substr(5,2)+"-"+ date.substr(8,2);
+            return result;
         },
 
         
@@ -371,7 +492,9 @@ export default {
             .get("https://localhost:44372/api/v1/Employees/"+employeeId)
             .then((res)=>{
                 this.selectedEmp = res.data;
-                //this.selectedEmp.dateOfBirth= this.formatDate(this.selectedEmp.dateOfBirth)
+                // định dạng lại ngày tháng để đưa lên dialog chi tiết
+                this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
+                this.selectedEmp.dateRange = this.formatDateForDetail(this.employee.dateRange)
             })
             .catch((res)=>{
                this.response= res;  
@@ -383,6 +506,7 @@ export default {
                 var propName = propsSelectedEmp[i];
                 this.oldEmployee[propName] = this.selectedEmp[propName];    
             }
+             
         },
 
         /**

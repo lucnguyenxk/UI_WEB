@@ -69,6 +69,10 @@ export default {
     isDialogShow : {
         type : Boolean,
         default : false
+    },
+    isMissingDepartment:{
+      type: Boolean,
+      default:false
     }
   },
 
@@ -91,7 +95,7 @@ export default {
      * created by ndluc(18/06/2021)
      */
     mouseOver(data){
-      if(data =="department"){
+      if(data =="department" &&( this.label_value==""|| this.label_value ==null)){
         this.isHoverDepartmentInput = true;
       }
     },
@@ -341,11 +345,18 @@ export default {
   mounted(){
   },
   watch:{
-      isDialogShow(){
-          if(this.isDialogShow){
-              this.getDeFaultValue();
-          }
-      },
+
+    /**
+     * theo dõi sự thay đổi của mảng các giá trị để cập lại mảng giá trị lựa chọn
+     * created by ndluc(15/06/2021)
+     */
+    async options(){
+      if(this.label_value==null|| this.label_value==""){
+        this.data_filter = this.options;
+      }
+      await this.getDeFaultValue();
+    },
+
       /**
        * set giá trị cho otion được chọn khi giá trị truyền vào null 
        * created by ndluc(15/06/2021)
@@ -362,7 +373,7 @@ export default {
        */
       label_value(){
           if(this.label_value ==""){
-              this.option_selected[this.value_key] =null;
+              this.data_filter = this.options;
               this.$emit("input", "");
           }
           else if(this.label_value == null || this.label_value !=""){

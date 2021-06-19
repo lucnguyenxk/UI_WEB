@@ -30,6 +30,11 @@ export default {
         isShowNoti:{type : Boolean, default: false}
     },
     methods: {
+
+        /**
+         * tắt thông báo trùng mã nhân viên
+         * created by ndluc(18/06/2021)
+         */
         acceptNoti(){
             this.$emit('hideNotiDuplicateCode');
         }  

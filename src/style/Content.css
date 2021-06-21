@@ -106,9 +106,10 @@
 }
 
 table {
-    border-collapse: collapse;
+    border-collapse: separate;
     min-width: 100%;
     text-align-last: left;
+    border-spacing: 0;
 }
 
 table tr {
@@ -119,9 +120,11 @@ table tr {
 thead tr {
     height: 32px;
 }
-
 tbody tr {
     height: 48px;
+}
+tbody tr:hover td{
+    background-color: #f1f6f7 !important;
 }
 
 tr th {
@@ -137,8 +140,9 @@ tr th {
 
 th,
 td {
-    padding-left: 5px;
-    border-right: 1px dotted #c7c7c7;
+    padding-left: 8px;
+    border-right: 1px dotted #a07070;
+    border-bottom: 1px solid #c7c7c7;
 }
 
 .inputCheckbox {
@@ -151,7 +155,7 @@ td {
 
 .grid {
     margin-top: 10px;
-    height: 60vh;
+    height: calc(100vh - 275px) !important;
     overflow-y: scroll;
     padding-left: 16px;
     padding-right: 10px;
@@ -191,11 +195,16 @@ td {
 }
 
 .employeePhoneNumber {
-    min-width: 200px;
+    min-width: 150px;
 }
 
 .employeeDOB {
-    min-width: 200px;
+    min-width: 130px;
+}
+.empDob{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .funtion {
@@ -229,22 +238,25 @@ tbody .uiFuntion {
 .Employee {
     margin-left: 8px;
     border: none;
-    background-color: #ffffff;
     color: #0075c0;
     font-weight: 600;
+    background-color: transparent;
 }
 
 .listFunc {
-    background-image: url("../assets/img/listfunc.png");
-    background-repeat: no-repeat;
+    /* background-image: url("../assets/img/listfunc.png"); */
+    background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -900px -365px;
+    /* background-repeat: no-repeat;
     background-size: auto;
-    background-position: center;
+    background-position: center; */
+    width: 8px;
+    height: 5px;
     margin-left: 0px;
+    padding: 0;
 }
 
 .footer {
     align-items: center;
-    margin-top: 15px;
     height: 50px;
     display: flex;
     justify-content: space-between;

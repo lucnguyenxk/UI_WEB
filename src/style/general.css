@@ -1,7 +1,7 @@
 
-@import url('button.css');
-@import url('selection.css');
-@import url('input.css');
+@import url('Button.css');
+@import url('Selection.css');
+@import url('Input.css'); 
 body {
     margin: 0;
 }
@@ -63,4 +63,20 @@ div{
 
 .bg-selected-row{
     background-color: #f0f0f0;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(233, 233, 233);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(219, 219, 219);
 }

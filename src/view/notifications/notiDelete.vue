@@ -17,7 +17,7 @@
     </div>
 </template>
 <style>
-@import '../../style/notiDelete.css';
+@import '../../style/NotiDelete.css';
 </style>
 <script>
 import axios from 'axios'

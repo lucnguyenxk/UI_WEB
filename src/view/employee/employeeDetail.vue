@@ -323,7 +323,7 @@
   </div>
 </template>
 <style>
-@import "../../style/dialog.css";
+@import "../../style/Dialog.css";
 .missing {
   display: none;
 }
@@ -348,10 +348,10 @@
 </style>
 <script>
 import axios from "axios";
-import NotiDuplicateCode from "../notifications/notiDuplicateCode.vue";
-import NotiCloseDialog from "../notifications/notiCloseDialog.vue";
-import NotiEmptyValue from "../notifications/notiEmptyValue.vue";
-import ComboboxAutoComplete from "../combobox/comboboxAutoComplete.vue";
+import NotiDuplicateCode from "../notifications/NotiDuplicateCode.vue";
+import NotiCloseDialog from "../notifications/NotiCloseDialog.vue";
+import NotiEmptyValue from "../notifications/NotiEmptyValue.vue";
+import ComboboxAutoComplete from "../combobox/ComboboxAutoComplete.vue";
 import dayjs from "dayjs";
 import DatePicker from "vue-date-pick";
 import "vue-date-pick/dist/vueDatePick.css";

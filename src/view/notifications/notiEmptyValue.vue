@@ -43,7 +43,7 @@ export default {
 }
 </script>
 <style>
-@import '../../style/notiDelete.css';
+@import '../../style/NotiDelete.css';
 
 .imgErr{
     width: 40px !important;

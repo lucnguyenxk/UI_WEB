@@ -489,7 +489,7 @@ $icon-toggle: url("");
 @mixin Flex-Center {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
 }
 
 /*************************
@@ -529,6 +529,7 @@ $icon-toggle: url("");
       position: absolute;
       right: 0px;
       @include Flex-Center;
+      justify-content: center !important;
       @include Size(30px, 100%);
       cursor: pointer;
       .icon-toggle {
@@ -558,7 +559,9 @@ $icon-toggle: url("");
         color: $color-default;
         @include Size(100%,$height);
         @include Flex-Center;
-        background-color: #f8f8f8
+        background-color: #f8f8f8;
+        padding-left: 8px ;
+
     }
     /* -------- option ---------- */
     .option {
@@ -566,6 +569,9 @@ $icon-toggle: url("");
       @include Flex-Center;
       color: $color-default;
       cursor: pointer;
+      padding-left: 8px ;
+      font-weight: 400;
+      
       
       &:hover {
         background: $background-hover;

@@ -18,7 +18,7 @@
     </div>
 </template>
 <style>
-@import '../../style/notiCloseDialog.css';
+@import '../../style/NotiCloseDialog.css';
 </style>
 <script>
 export default {

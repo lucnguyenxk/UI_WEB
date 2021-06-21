@@ -24,6 +24,7 @@
     padding-right: 12px;
     padding-left: 32px;
     font-weight: bold;
+    color: #000000;
 }
 .Dialog-Header{
     display: flex;

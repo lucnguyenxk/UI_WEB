@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import TheMenu from './components/theMenu'
-import TheHeader from './components/theHeader'
-import TheContent from './components/theContent'
+import TheMenu from './components/TheMenu'
+import TheHeader from './components/TheHeader'
+import TheContent from './components/TheContent'
 export default {
   name: 'App',
   components: {
@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style>
-@import './style/general.css';
+@import './style/General.css';
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

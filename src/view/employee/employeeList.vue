@@ -23,7 +23,7 @@
                             <th class="employeeCode">MÃ NHÂN VIÊN</th>
                             <th class="employeeFullName">HỌ TÊN</th>
                             <th class="employeeGender">GIỚI TÍNH</th>
-                            <th class="employeeDOB">NGÀY SINH</th>
+                            <th class="employeeDOB"><div class="empDob">NGÀY SINH</div></th>
                             <th class="employeePhoneNumber">ĐiỆN THOẠI</th>
                             <th class="employeeEmail">EMAIL</th>
                             <th class="employeePosition">CHỨC VỤ</th>
@@ -38,7 +38,7 @@
                                 <td class="employeeCode">{{emp.employeeCode}}</td>
                                 <td class="employeeFullName">{{emp.fullName}}</td>
                                 <td class="employeeGender">{{emp.genderName}}</td>
-                                <td class="employeeDOB">{{formatDate(emp.dateOfBirth)}}</td>
+                                <td class="employeeDOB"><div class="empDob">{{formatDate(emp.dateOfBirth)}}</div></td>
                                 <td class="employeePhoneNumber">{{emp.phoneNumber}}</td>
                                 <td class="employeeEmail">{{emp.email}}</td>
                                 <td class="employeePosition">{{emp.position}}</td>
@@ -98,12 +98,12 @@
     </div>
 </template>
 <script>
-import NotiDelete  from "../notifications/notiDelete"
-import EmployeeDetail from "./employeeDetail.vue"
+import NotiDelete  from "../notifications/NotiDelete"
+import EmployeeDetail from "./EmployeeDetail.vue"
 //import ListFunction from "./listFunction.vue"
 import axios from 'axios'
-import ListFunction from '../notifications/listFunction.vue';
-import Pagination from '../paginations/pagination.vue';
+import ListFunction from '../notifications/ListFunction.vue';
+import Pagination from '../paginations/Pagination.vue';
 export default {
     components:{
         EmployeeDetail,
@@ -539,5 +539,5 @@ export default {
 }
 </script>
 <style>
-@import '../../style/content.css';
+@import '../../style/Content.css';
 </style>

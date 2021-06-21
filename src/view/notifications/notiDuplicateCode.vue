@@ -45,7 +45,7 @@ export default {
 }
 </script>
 <style>
-@import '../../style/notiDelete.css';
+@import '../../style/NotiDelete.css';
 .duplicateCode{
     display: flex;
     align-items: center;

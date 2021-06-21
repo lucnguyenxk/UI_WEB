@@ -5,8 +5,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 Vue.config.productionTip = false;
-import EmployeeList from './view/employee/employeeList.vue';
-import Report from './view/report/report.vue'
+import EmployeeList from './view/employee/EmployeeList.vue';
+import Report from './view/report/Report.vue'
 const routes = [
     {path :'/customerList', component:EmployeeList},
     {path : '/report', component:Report},

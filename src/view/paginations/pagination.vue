@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Combobox from '../combobox/combobox.vue'
+import Combobox from '../combobox/Combobox.vue'
 export default {
     components:{
         Combobox,

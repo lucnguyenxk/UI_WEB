@@ -403,9 +403,6 @@ export default {
             var result = date.substr(0,4)+"-"+date.substr(5,2)+"-"+ date.substr(8,2);
             return result;
         },
-
-        
-
          /**
          * hàm load dữ liệu có phân trang
          * created by ndluc(14/06/2021)

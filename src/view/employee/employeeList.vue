@@ -3,8 +3,8 @@
         <div class=" page-title">
                 <div class="page-left "> Nhân viên </div>   
                 <div class="page-right ">
-                    <button class="btn-default" id="btn-add">
-                        <div id="text-btn-add" class="text-btn-add" @click="addEmployeeOnClick()">Thêm mới nhân viên</div>
+                    <button class="btn-default" id="btn-add" @click="addEmployeeOnClick()">
+                        <div id="text-btn-add" class="text-btn-add" >Thêm mới nhân viên</div>
                     </button>
                 </div>
             </div>
@@ -90,6 +90,11 @@
             :idToDelete ="this.currentId"
             :empCodeToDelete="this.empCodeToDelete"
             />
+            <div class ="" :class="{'LoadingDataSucced': !isLoadingData}">
+                <div class="modelLoadingData">
+                    <div class="imgLoading"></div>
+                </div>
+            </div>
     </div>
 </template>
 <script>
@@ -246,7 +251,13 @@ export default {
              * đối tượng nhận các thông báo từ api,
              * created by ndluc(18/06/2021)
              */
-            response:{}
+            response:{},
+
+            /**
+             * biến kiểm tra việc đang lấy dữ liệu từ serve
+             * created by ndluc(19/06/2021)
+             */
+            isLoadingData: false,
         }
     },  
     methods:{
@@ -312,16 +323,13 @@ export default {
          * created by ndluc(14/06/2021)
          */
         listFuncOnClick(id,code){
-            if(this.isShowListFunction) {
-                this.isShowListFunction = false;
-                this.currentId = "";
-                this.empCodeToDelete = "";
+            this.empCodeToDelete= "<"+code+">";
+            if(this.currentId == id){
+                this.isShowListFunction = !this.isShowListFunction;
             }
-            else 
-            {
-                this.empCodeToDelete= "<"+code+">";
+            else{
+                this.isShowListFunction = true;
                 this.currentId = id;
-                this.isShowListFunction =true;
             }
         },
 
@@ -403,9 +411,11 @@ export default {
          * created by ndluc(14/06/2021)
          */
         loadPaging(){
+            this.isLoadingData = true;
             axios
             .get("https://localhost:44372/api/v1/Employees/GetPaging?PageNumber="+this.currentPage+"&PageSize=" +this.PageSize +"&SearchString="+this.SearchString)
             .then((res)=>{
+                this.isLoadingData = false;
                 this.employees = res.data;
                 if(this.employees.length> 0){
                     this.totalRecord = this.employees[0].totalRecord;
@@ -476,7 +486,6 @@ export default {
          * created by ndluc(14/06/2021)
          */
         addMoreEmployee(){
-            //debugger;// eslint-disable-line no-debugger
             this.addEmployeeOnClick();
         },
 
@@ -494,7 +503,8 @@ export default {
                 this.selectedEmp = res.data;
                 // định dạng lại ngày tháng để đưa lên dialog chi tiết
                 this.selectedEmp.dateOfBirth= this.formatDateForDetail(this.selectedEmp.dateOfBirth)
-                this.selectedEmp.dateRange = this.formatDateForDetail(this.employee.dateRange)
+                this.selectedEmp.dateRange = this.formatDateForDetail(this.selectedEmp.dateRange)
+                //debugger;// eslint-disable-line no-debugger
             })
             .catch((res)=>{
                this.response= res;  

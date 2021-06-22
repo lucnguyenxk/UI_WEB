@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import TheMenu from './components/TheMenu'
-import TheHeader from './components/TheHeader'
-import TheContent from './components/TheContent'
+import TheMenu from './components/TheMenu.vue'
+import TheHeader from './components/TheHeader.vue'
+import TheContent from './components/TheContent.vue'
 export default {
   name: 'App',
   components: {

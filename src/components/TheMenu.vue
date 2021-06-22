@@ -71,5 +71,5 @@
     </div>
 </template>
 <style>
-@import '../style/menu.css';
+@import '../style/Menu.css';
 </style>

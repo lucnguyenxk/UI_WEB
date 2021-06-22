@@ -100,6 +100,7 @@
                         ref="dateOfBirth"
                         displayFormat="DD/MM/YYYY"
                         :inputAttributes="{
+                          readonly:true,
                           class: 'input',
                           style: 'font-size: 13px',
                           placeholder: 'DD/MM/YYYY',
@@ -180,8 +181,10 @@
                     <!-- <input type="date" class="dateofRange"> -->
                     <div class="date-picker dateofRange">
                       <DatePicker
+                        ref="dateRange"
                         displayFormat="DD/MM/YYYY"
                         :inputAttributes="{
+                          readonly:true,
                           class: 'dateofRange',
                           style: 'font-size: 13px',
                           placeholder: 'DD/MM/YYYY',
@@ -355,7 +358,7 @@ import ComboboxAutoComplete from "../combobox/ComboboxAutoComplete.vue";
 import dayjs from "dayjs";
 import DatePicker from "vue-date-pick";
 import "vue-date-pick/dist/vueDatePick.css";
-import moment from "moment";
+//import moment from "moment";
 
 export default {
   components: {
@@ -551,28 +554,39 @@ export default {
      * định dạng lại ngày tháng để gửi cho dialog
      * created by ndluc(14/06/2021)
      */
-    // formatYYYMMDD(data){
-    //     // var date = data + "";
-    //     // if(date=="null") return null;
-    //     // var result = date.substr(0,4) +"-"+ date.substr(5,2)+"-"+date.substr(8,2);
-    //     // return result
-    //     return data ? dayjs(data).format("YYYY-MM-DD") : null;
-    // },
     formatYYYMMDD(dateStr) {
       return dayjs(dateStr).format("YYYY-MM-DD");
     },
 
-    /**
-     * validate ngày tháng trước khi lưu nhân viên
-     * created by ndluc(19/06/2021)
-     */
-    validateDatime(date) {
-        if(this.$refs.dateOfBirth.inputValue !=null && this.$refs.dateOfBirth.inputValue.length!= 10 ) return "Invalid date"
-        if (date != "" && date != null) {
-            if(date.length !=10) return "Invalid date"
-            return moment(date).format("MM/DD/YYYY");
-        }
-    },
+
+    // formatDate(date){
+    //   if(date!=null&&date!=""){
+    //     if(date.length > 10) return "Invalid Date"
+    //   }
+    //   if()
+    // },
+    // /**
+    //  * validate ngày tháng trước khi lưu nhân viên
+    //  * created by ndluc(19/06/2021)
+    //  */
+    // validateDatime() {
+    //     var dateFormatStatus;
+    //     var dateValue;
+    //     debugger;//eslint-disable-line no-debugger
+    //     if(this.$refs.dateOfBirth.inputValue !=null && this.$refs.dateOfBirth.inputValue!= "") 
+    //     {
+    //       dateFormatStatus= moment(this.$refs.dateOfBirth.inputValue).format("DD/MM/YYYY");
+    //       dateValue = moment(this.employee.dateOfBirth).format("DD/MM/YYYY");
+          
+    //     }
+
+    //     if( dateFormatStatus!= "Invalid date" &&this.$refs.dateRange.inputValue !=null && this.$refs.dateRange.inputValue != "" &&dateValue!="Invalid Date") 
+    //     {
+    //       dateFormatStatus= moment(this.$refs.dateRange.inputValue).format("DD/MM/YYYY");
+    //       dateValue = moment(this.employee.dateOfBirth).format("DD/MM/YYYY");
+    //     }
+    //     return dateFormatStatus;
+    // },
 
     /**
      * validate toàn bộ dữ liệu trước khi gửi lên serve
@@ -606,14 +620,15 @@ export default {
         this.notiEmptyValue = "Đơn vị không được để trống.";
         this.$refs.comboboxAutoComplete.isHoverDepartmentInput = true;
         this.$refs.comboboxAutoComplete.resultEmpty = true;
-      } else if (
-        this.validateDatime(this.employee.dateOfBirth) == "Invalid date" ||
-        this.validateDatime(this.employee.dateRange) == "Invalid date"
-      ) {
-        this.isShowNotiEmptyValue = true;
-        this.notiEmptyValue = "Ngày tháng không đúng định dạng.";
-        this.validate = false;
-      } else {
+       }
+      //else if (
+      //   this.validateDatime(this.employee.dateOfBirth) == "Invalid date"
+      // ) {
+      //   this.isShowNotiEmptyValue = true;
+      //   this.notiEmptyValue = "Ngày tháng không đúng định dạng.";
+      //   this.validate = false;
+      // } 
+      else {
         this.validate = true;
       }
       if (this.employee.dateOfBirth == "") {

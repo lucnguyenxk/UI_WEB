@@ -258,6 +258,11 @@ export default {
              * created by ndluc(19/06/2021)
              */
             isLoadingData: false,
+            /**
+             * Biến delay việc lọc dữ liệu khi người dùng vẫn đang nhập chuỗi tìm kiếm
+             * created by ndluc(19/06/2021)
+             */
+            timeout: 0,
         }
     },  
     methods:{
@@ -296,7 +301,8 @@ export default {
             this.currentPage = 1;
             this.pageOne = this.currentPage;
             this.isSearch =  true;
-            await this.loadPaging();
+            clearTimeout(this.timeout);
+            this.timeout=setTimeout(this.loadPaging, 500);   
             this.isSearch = false;
         },
 
